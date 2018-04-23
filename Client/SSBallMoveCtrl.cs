@@ -2,22 +2,22 @@
 
 public class SSBallMoveCtrl : MonoBehaviour
 {
-    public Transform EndTr;
+    //public Transform EndTr;
     public SSBallPathCtrl m_Path;
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Init(EndTr.position); //test.
-        }
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        Init(m_Path); //test.
+    //    }
+    //}
 
 
     public float m_MinHight = 1f;
     public float m_MaxHight = 5f;
     public float m_TimeMove = 3f;
     public Rigidbody m_Rigidbody;
-    public void Init(Vector3 endPos)
+    public void Init(SSBallPathCtrl pathBall)
     {
         //float lobTime = m_TimeMove;
         //float lobTimePosY = 0.5f * lobTime;
@@ -35,6 +35,7 @@ public class SSBallMoveCtrl : MonoBehaviour
         //posArray[0] = transform.position;
         //posArray[1] = endPos;
 
+        m_Path = pathBall;
         Transform[] path = m_Path.GetPath();
         if (path == null)
         {
@@ -58,19 +59,34 @@ public class SSBallMoveCtrl : MonoBehaviour
     void MoveBallOnCompelteITween()
     {
         Debug.Log("MoveBallOnCompelteITween...");
-        //if (m_Rigidbody != null)
-        //{
-        //    m_Rigidbody.isKinematic = false;
-        //}
+        if (m_Rigidbody != null)
+        {
+            m_Rigidbody.useGravity = true;
+        }
     }
 
     bool IsRemoveITwwen = false;
+    /// <summary>
+    /// 篮球撞击的推力.
+    /// </summary>
+    [Range(0f, 10000f)]
+    public float m_ForceBall = 50f;
+    /// <summary>
+    /// 篮球撞击的转动力.
+    /// </summary>
+    [Range(0f, 10000f)]
+    public float m_TorqueBall = 50f;
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("OnCollisionEnter...");
         if (m_Rigidbody != null)
         {
             m_Rigidbody.useGravity = true;
+            Vector3 hitPos = collision.transform.position;
+            Vector3 ballPos = transform.position;
+            Vector3 vecHB = Vector3.Normalize(ballPos - hitPos);
+            m_Rigidbody.AddForce(vecHB * m_ForceBall, ForceMode.Force);
+            rigidbody.AddTorque(transform.right * m_TorqueBall);
         }
 
         if (!IsRemoveITwwen)

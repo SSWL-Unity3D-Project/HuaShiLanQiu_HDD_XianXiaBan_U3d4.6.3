@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class SSBallPathCtrl : MonoBehaviour
 {
+    void Start()
+    {
+        enabled = false;
+    }
+
     public Transform[] GetPath()
     {
         Transform parTran = transform;
