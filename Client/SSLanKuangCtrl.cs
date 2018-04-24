@@ -20,11 +20,55 @@ public class SSLanKuangCtrl : MonoBehaviour
     /// </summary>
     [Range(0.01f, 100f)]
     public float m_SpeedX = 5f;
-	
+    
+    byte[] KeyCodeState = new byte[2];
+    float m_InputHorVal = 0f;
+    float GetInputHorVal()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            m_InputHorVal = -1f;
+            KeyCodeState[0] = 1;
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            if (KeyCodeState[1] == 0)
+            {
+                m_InputHorVal = 0f;
+            }
+            else if (KeyCodeState[1] == 1)
+            {
+                m_InputHorVal = 1f;
+            }
+            KeyCodeState[0] = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            m_InputHorVal = 1f;
+            KeyCodeState[1] = 1;
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            if (KeyCodeState[0] == 0)
+            {
+                m_InputHorVal = 0f;
+            }
+            else if (KeyCodeState[0] == 1)
+            {
+                m_InputHorVal = -1f;
+            }
+            KeyCodeState[1] = 0;
+        }
+        return m_InputHorVal;
+    }
+
 	// Update is called once per frame
 	void Update()
     {
-        float inputHorVal = Input.GetAxis("Horizontal");
+        float inputHorVal = GetInputHorVal();
         Vector3 pos = m_RealKuangTr.localPosition;
         if (inputHorVal != 0f)
         {
