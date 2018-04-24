@@ -8,11 +8,6 @@ public class SSBallSpawnPoint : MonoBehaviour
     public GameObject m_BallPrefab;
     public float m_TimeMinSpawn = 2f;
     float m_LastBallSpawn = 0f;
-    //public float m_TimeMaxSpawn = 2f;
-    /// <summary>
-    /// 篮球路径.
-    /// </summary>
-    public SSBallPathCtrl[] m_BallPathArray;
 	// Update is called once per frame
 	void Update()
     {
@@ -22,7 +17,8 @@ public class SSBallSpawnPoint : MonoBehaviour
             SpawnGameBall();
         }
 	}
-
+    
+    public Transform[] m_SpawnPointTrArray;
     void SpawnGameBall()
     {
         if (m_BallPrefab == null)
@@ -31,21 +27,22 @@ public class SSBallSpawnPoint : MonoBehaviour
             return;
         }
 
-        if (m_BallPathArray.Length <= 0)
+        if (m_SpawnPointTrArray.Length <= 0)
         {
-            Debug.LogWarning("SpawnGameBall -> m_BallPathArray was wrong!");
+            Debug.LogWarning("SpawnGameBall -> m_SpawnPointTrArray was wrong!");
             return;
         }
 
-        int randVal = Random.Range(0, 100) % m_BallPathArray.Length;
-        if (m_BallPathArray[randVal] == null)
+        int randVal = Random.Range(0, 100) % m_SpawnPointTrArray.Length;
+        if (m_SpawnPointTrArray[randVal] == null)
         {
             return;
         }
 
-        Transform trSpawn = m_BallPathArray[randVal].transform.GetChild(0);
+        Transform trSpawn = m_SpawnPointTrArray[randVal].transform;
         GameObject obj = (GameObject)Instantiate(m_BallPrefab, trSpawn.position, trSpawn.rotation);
-        SSBallMoveCtrl ballMove = obj.GetComponent<SSBallMoveCtrl>();
-        ballMove.Init(m_BallPathArray[randVal]);
+        obj.transform.parent = SSGameRootCtrl.GetInstance().MissionCleanup;
+        SSBallAniCtrl ballAni = obj.GetComponent<SSBallAniCtrl>();
+        ballAni.Init();
     }
 }

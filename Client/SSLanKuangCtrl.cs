@@ -3,6 +3,10 @@
 public class SSLanKuangCtrl : MonoBehaviour
 {
     /// <summary>
+    /// 篮球运动轨迹测试.
+    /// </summary>
+    public SSBallMoveCtrl m_BallMoveTest;
+    /// <summary>
     /// 篮筐Tr.
     /// </summary>
     public Transform m_RealKuangTr;
@@ -22,7 +26,6 @@ public class SSLanKuangCtrl : MonoBehaviour
     {
         float inputHorVal = Input.GetAxis("Horizontal");
         Vector3 pos = m_RealKuangTr.localPosition;
-        //pos.x = m_DisXMax * inputHorVal;
         if (inputHorVal != 0f)
         {
             //硬件版篮筐的移动方案可能和软件版不一样.
@@ -65,4 +68,19 @@ public class SSLanKuangCtrl : MonoBehaviour
         }
         m_RealKuangTr.localPosition = pos;
     }
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
+    {
+        if (Application.isPlaying)
+        {
+            return;
+        }
+
+        if (m_BallMoveTest != null)
+        {
+            m_BallMoveTest.DrawPath();
+        }
+    }
+#endif
 }
