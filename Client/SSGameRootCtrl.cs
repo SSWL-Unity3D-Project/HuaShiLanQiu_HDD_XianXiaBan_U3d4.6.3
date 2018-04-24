@@ -12,7 +12,7 @@ public class SSGameRootCtrl : MonoBehaviour
     {
         if (_Instance == null)
         {
-            GameObject obj = new GameObject();
+            GameObject obj = new GameObject("_GameRoot");
             _Instance = obj.AddComponent<SSGameRootCtrl>();
             _Instance.Init();
         }
@@ -21,7 +21,7 @@ public class SSGameRootCtrl : MonoBehaviour
 
     void Init()
     {
-        GameObject obj = new GameObject();
+        GameObject obj = new GameObject("_MissionCleanup");
         MissionCleanup = obj.transform;
     }
 }

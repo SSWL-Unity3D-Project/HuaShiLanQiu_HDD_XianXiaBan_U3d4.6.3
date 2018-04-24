@@ -96,7 +96,7 @@ public class SSBallMoveCtrl : MonoBehaviour
     public float m_TorqueBall = 50f;
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnCollisionEnter...");
+        //Debug.Log("OnCollisionEnter...");
         IsInitMoveBall = false;
         if (m_Rigidbody != null)
         {
