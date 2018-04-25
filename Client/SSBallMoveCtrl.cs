@@ -3,9 +3,10 @@
 public class SSBallMoveCtrl : MonoBehaviour
 {
     public Rigidbody m_Rigidbody;
-    public void Init()
+    public void Init(float ballMoveSpeedBeiLv = 1f)
     {
         IsInitMoveBall = true;
+        m_BallMoveSpeedBeiLv = ballMoveSpeedBeiLv;
         if (m_Rigidbody != null)
         {
             m_Rigidbody.useGravity = false;
@@ -13,6 +14,10 @@ public class SSBallMoveCtrl : MonoBehaviour
     }
 
     int m_MoveCount = 0;
+    /// <summary>
+    /// 篮球运动速度倍率控制.
+    /// </summary>
+    float m_BallMoveSpeedBeiLv = 1f;
     void FixedUpdate()
     {
         if (!IsInitMoveBall)
@@ -21,13 +26,12 @@ public class SSBallMoveCtrl : MonoBehaviour
         }
 
         m_MoveCount++;
-        Vector3 startPos = transform.position;
-        Vector3 nextPos = Vector3.zero;
+        Vector3 ballPos = Vector3.zero;
         float timeZ = Time.fixedDeltaTime;
-        float timeVal = timeZ * m_MoveCount;
-        nextPos.z = timeVal * m_SpeedZ;
-        nextPos.y = m_SpeedY * timeVal + 0.5f * m_JiaSuDu * Mathf.Pow(timeVal, 2f);
-        transform.localPosition = nextPos;
+        float timeVal = timeZ * m_MoveCount * m_BallMoveSpeedBeiLv;
+        ballPos.z = timeVal * m_SpeedZ;
+        ballPos.y = m_SpeedY * timeVal + 0.5f * m_JiaSuDu * Mathf.Pow(timeVal, 2f);
+        transform.localPosition = ballPos;
     }
 
     bool IsInitMoveBall = false;
