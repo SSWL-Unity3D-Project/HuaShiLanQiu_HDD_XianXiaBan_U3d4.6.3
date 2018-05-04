@@ -152,11 +152,6 @@ public class SSLanKuangCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
-        {
-            return;
-        }
-
         float inputHorVal = 0f;
         switch (m_PlayerIndex)
         {
@@ -170,6 +165,11 @@ public class SSLanKuangCtrl : MonoBehaviour
                     inputHorVal = GetInputHorValP2();
                     break;
                 }
+        }
+
+        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
+        {
+            return;
         }
 
         Vector3 pos = m_RealKuangTr.localPosition;

@@ -35,6 +35,8 @@ public class SSGameDataCtrl : MonoBehaviour
         m_PlayerData[0] = new PlayerData();
         m_PlayerData[1] = new PlayerData();
         _Instance = this;
+
+        SetActivePlayer(PlayerIndex.Player01, true); //test
     }
 
     void Update()
