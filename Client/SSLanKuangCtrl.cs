@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class SSLanKuangCtrl : MonoBehaviour
@@ -61,90 +62,181 @@ public class SSLanKuangCtrl : MonoBehaviour
         {
             m_SSTriggerScore.m_PlayerIndex = m_PlayerIndex;
         }
+
+        InputEventCtrl.GetInstance().OnClickLeftHorBtEvent += OnClickLeftHorBtEvent;
+        InputEventCtrl.GetInstance().OnClickRightHorBtEvent += OnClickRightHorBtEvent;
+    }
+
+    private void OnClickLeftHorBtEvent(SSGameDataCtrl.PlayerIndex index, InputEventCtrl.ButtonState val)
+    {
+        if (index == m_PlayerIndex)
+        {
+            switch (index)
+            {
+                case SSGameDataCtrl.PlayerIndex.Player01:
+                    {
+                        if (val == InputEventCtrl.ButtonState.DOWN)
+                        {
+                            GetInputHorValP1(ArrowBtState.LeftArrowDown);
+                        }
+
+                        if (val == InputEventCtrl.ButtonState.UP)
+                        {
+                            GetInputHorValP1(ArrowBtState.LeftArrowUp);
+                        }
+                        break;
+                    }
+                case SSGameDataCtrl.PlayerIndex.Player02:
+                    {
+                        if (val == InputEventCtrl.ButtonState.DOWN)
+                        {
+                            GetInputHorValP2(ArrowBtState.LeftArrowDown);
+                        }
+
+                        if (val == InputEventCtrl.ButtonState.UP)
+                        {
+                            GetInputHorValP2(ArrowBtState.LeftArrowUp);
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+
+    private void OnClickRightHorBtEvent(SSGameDataCtrl.PlayerIndex index, InputEventCtrl.ButtonState val)
+    {
+        if (index == m_PlayerIndex)
+        {
+            switch (index)
+            {
+                case SSGameDataCtrl.PlayerIndex.Player01:
+                    {
+                        if (val == InputEventCtrl.ButtonState.DOWN)
+                        {
+                            GetInputHorValP1(ArrowBtState.RightArrowDown);
+                        }
+
+                        if (val == InputEventCtrl.ButtonState.UP)
+                        {
+                            GetInputHorValP1(ArrowBtState.RightArrowUp);
+                        }
+                        break;
+                    }
+                case SSGameDataCtrl.PlayerIndex.Player02:
+                    {
+                        if (val == InputEventCtrl.ButtonState.DOWN)
+                        {
+                            GetInputHorValP2(ArrowBtState.RightArrowDown);
+                        }
+
+                        if (val == InputEventCtrl.ButtonState.UP)
+                        {
+                            GetInputHorValP2(ArrowBtState.RightArrowUp);
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+
+    enum ArrowBtState
+    {
+        LeftArrowDown = 0,
+        LeftArrowUp = 1,
+        RightArrowDown = 2,
+        RightArrowUp = 3,
     }
 
     byte[] KeyCodeState = new byte[2];
     float m_InputHorVal = 0f;
-    float GetInputHorValP1()
+    float GetInputHorValP1(ArrowBtState valBt)
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        switch (valBt)
         {
-            m_InputHorVal = -1f;
-            KeyCodeState[0] = 1;
-        }
-
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            if (KeyCodeState[1] == 0)
-            {
-                m_InputHorVal = 0f;
-            }
-            else if (KeyCodeState[1] == 1)
-            {
-                m_InputHorVal = 1f;
-            }
-            KeyCodeState[0] = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            m_InputHorVal = 1f;
-            KeyCodeState[1] = 1;
-        }
-
-        if (Input.GetKeyUp(KeyCode.D))
-        {
-            if (KeyCodeState[0] == 0)
-            {
-                m_InputHorVal = 0f;
-            }
-            else if (KeyCodeState[0] == 1)
-            {
-                m_InputHorVal = -1f;
-            }
-            KeyCodeState[1] = 0;
+            case ArrowBtState.LeftArrowDown:
+                {
+                    m_InputHorVal = -1f;
+                    KeyCodeState[0] = 1;
+                    break;
+                }
+            case ArrowBtState.LeftArrowUp:
+                {
+                    if (KeyCodeState[1] == 0)
+                    {
+                        m_InputHorVal = 0f;
+                    }
+                    else if (KeyCodeState[1] == 1)
+                    {
+                        m_InputHorVal = 1f;
+                    }
+                    KeyCodeState[0] = 0;
+                    break;
+                }
+            case ArrowBtState.RightArrowDown:
+                {
+                    m_InputHorVal = 1f;
+                    KeyCodeState[1] = 1;
+                    break;
+                }
+            case ArrowBtState.RightArrowUp:
+                {
+                    if (KeyCodeState[0] == 0)
+                    {
+                        m_InputHorVal = 0f;
+                    }
+                    else if (KeyCodeState[0] == 1)
+                    {
+                        m_InputHorVal = -1f;
+                    }
+                    KeyCodeState[1] = 0;
+                    break;
+                }
         }
         return m_InputHorVal;
     }
 
-    float GetInputHorValP2()
+    float GetInputHorValP2(ArrowBtState valBt)
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        switch (valBt)
         {
-            m_InputHorVal = -1f;
-            KeyCodeState[0] = 1;
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            if (KeyCodeState[1] == 0)
-            {
-                m_InputHorVal = 0f;
-            }
-            else if (KeyCodeState[1] == 1)
-            {
-                m_InputHorVal = 1f;
-            }
-            KeyCodeState[0] = 0;
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            m_InputHorVal = 1f;
-            KeyCodeState[1] = 1;
-        }
-
-        if (Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            if (KeyCodeState[0] == 0)
-            {
-                m_InputHorVal = 0f;
-            }
-            else if (KeyCodeState[0] == 1)
-            {
-                m_InputHorVal = -1f;
-            }
-            KeyCodeState[1] = 0;
+            case ArrowBtState.LeftArrowDown:
+                {
+                    m_InputHorVal = -1f;
+                    KeyCodeState[0] = 1;
+                    break;
+                }
+            case ArrowBtState.LeftArrowUp:
+                {
+                    if (KeyCodeState[1] == 0)
+                    {
+                        m_InputHorVal = 0f;
+                    }
+                    else if (KeyCodeState[1] == 1)
+                    {
+                        m_InputHorVal = 1f;
+                    }
+                    KeyCodeState[0] = 0;
+                    break;
+                }
+            case ArrowBtState.RightArrowDown:
+                {
+                    m_InputHorVal = 1f;
+                    KeyCodeState[1] = 1;
+                    break;
+                }
+            case ArrowBtState.RightArrowUp:
+                {
+                    if (KeyCodeState[0] == 0)
+                    {
+                        m_InputHorVal = 0f;
+                    }
+                    else if (KeyCodeState[0] == 1)
+                    {
+                        m_InputHorVal = -1f;
+                    }
+                    KeyCodeState[1] = 0;
+                    break;
+                }
         }
         return m_InputHorVal;
     }
@@ -152,26 +244,12 @@ public class SSLanKuangCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float inputHorVal = 0f;
-        switch (m_PlayerIndex)
-        {
-            case SSGameDataCtrl.PlayerIndex.Player01:
-                {
-                    inputHorVal = GetInputHorValP1();
-                    break;
-                }
-            case SSGameDataCtrl.PlayerIndex.Player02:
-                {
-                    inputHorVal = GetInputHorValP2();
-                    break;
-                }
-        }
-
         if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
         {
             return;
         }
 
+        float inputHorVal = m_InputHorVal;
         Vector3 pos = m_RealKuangTr.localPosition;
         if (inputHorVal != 0f)
         {

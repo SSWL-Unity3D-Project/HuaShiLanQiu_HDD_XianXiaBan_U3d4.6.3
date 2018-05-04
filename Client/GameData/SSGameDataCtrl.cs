@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class SSGameDataCtrl : MonoBehaviour
 {
@@ -35,25 +36,16 @@ public class SSGameDataCtrl : MonoBehaviour
         m_PlayerData[0] = new PlayerData();
         m_PlayerData[1] = new PlayerData();
         _Instance = this;
-
-        SetActivePlayer(PlayerIndex.Player01, true); //test
+        
+        //SetActivePlayer(PlayerIndex.Player01, true); //test
+        InputEventCtrl.GetInstance().OnClickStartBtEvent += OnClickStartBtEvent;
     }
 
-    void Update()
+    private void OnClickStartBtEvent(PlayerIndex index, InputEventCtrl.ButtonState val)
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (val == InputEventCtrl.ButtonState.DOWN)
         {
-            SetActivePlayer(PlayerIndex.Player01, true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SetActivePlayer(PlayerIndex.Player02, true);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            Application.Quit();
+            SetActivePlayer(index, true);
         }
     }
 
@@ -72,5 +64,20 @@ public class SSGameDataCtrl : MonoBehaviour
             m_PlayerData[(int)index].Score = 0;
             m_LanKuang[(int)index].ActiveLanQiuCollider();
         }
+    }
+
+    /// <summary>
+    /// Websocket预制.
+    /// </summary>
+    public GameObject m_WebSocketBoxPrefab;
+    /// <summary>
+    /// 产生Websocket预制.
+    /// </summary>
+    public GameObject SpawnWebSocketBox(Transform tr)
+    {
+        Debug.Log("SpawnWebSocketBox...");
+        GameObject obj = (GameObject)Instantiate(m_WebSocketBoxPrefab);
+        obj.transform.parent = tr;
+        return obj;
     }
 }
