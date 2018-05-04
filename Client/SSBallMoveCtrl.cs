@@ -2,14 +2,26 @@
 
 public class SSBallMoveCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 真正篮球模型.
+    /// </summary>
+    public Transform m_RealBallTr;
     public Rigidbody m_Rigidbody;
-    public void Init(float ballMoveSpeedBeiLv = 1f)
+    [HideInInspector]
+    public SSBallAniCtrl m_BallAni;
+    public void Init(SSBallAniCtrl ballAni, float ballMoveSpeedBeiLv = 1f)
     {
         IsInitMoveBall = true;
+        m_BallAni = ballAni;
         m_BallMoveSpeedBeiLv = ballMoveSpeedBeiLv;
         if (m_Rigidbody != null)
         {
             m_Rigidbody.useGravity = false;
+        }
+
+        if (m_RealBallTr != null)
+        {
+            m_RealBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
         }
     }
 
@@ -98,10 +110,26 @@ public class SSBallMoveCtrl : MonoBehaviour
     /// </summary>
     [Range(0f, 10000f)]
     public float m_TorqueBall = 50f;
+    /// <summary>
+    /// 碰撞次数累计,用来判断是否为空心球.
+    /// </summary>
+    [HideInInspector]
+    public int CountOnHit = 0;
+    /// <summary>
+    /// 是否是得分球.
+    /// </summary>
+    [HideInInspector]
+    public bool IsDeFenQiu = false;
     void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("OnCollisionEnter...");
         IsInitMoveBall = false;
+        SSTriggerScore triScore = collision.gameObject.GetComponent<SSTriggerScore>();
+        if (triScore == null)
+        {
+            CountOnHit++;
+        }
+
         if (m_Rigidbody != null)
         {
             if (!m_Rigidbody.useGravity)

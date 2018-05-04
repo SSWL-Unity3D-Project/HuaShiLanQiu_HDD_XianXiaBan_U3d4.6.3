@@ -37,10 +37,10 @@ public class SSBallPathCtrl : MonoBehaviour
             }
         }
     }
-#endif
 
     public void DrawPath()
     {
         OnDrawGizmosSelected();
     }
+#endif
 }

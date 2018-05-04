@@ -17,7 +17,8 @@ public class DestroyThisTimed : MonoBehaviour
 	{
 		//Debug.Log("DestroyThisTimed -> objName "+gameObject.name);
 		//Destroy(gameObject, TimeRemove);
-        Invoke("DelayDestroyThis", TimeRemove);
+        //Invoke("DelayDestroyThis", TimeRemove);
+        StartCoroutine(DelayDestroyThis(TimeRemove));
 	}
 
     public void InitInfo(GameObject liZi, GameObject baoXiang, float timeVal)
@@ -27,8 +28,9 @@ public class DestroyThisTimed : MonoBehaviour
         TimeRemove = timeVal;
     }
 
-    void DelayDestroyThis()
+    IEnumerator DelayDestroyThis(float time)
     {
+        yield return new WaitForSeconds(time);
         if (LiZiPrefab != null)
         {
             Instantiate(LiZiPrefab, transform.position, transform.rotation);

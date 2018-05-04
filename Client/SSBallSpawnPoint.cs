@@ -3,6 +3,10 @@
 public class SSBallSpawnPoint : MonoBehaviour
 {
     /// <summary>
+    /// 玩家索引.
+    /// </summary>
+    public SSGameDataCtrl.PlayerIndex m_PlayerIndex;
+    /// <summary>
     /// 篮球预制.
     /// </summary>
     public GameObject[] m_BallPrefabArray;
@@ -61,6 +65,11 @@ public class SSBallSpawnPoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
+        {
+            return;
+        }
+
         if (Time.time - m_TimeLastBallSpawn >= m_TimeMinSpawn)
         {
             m_TimeLastBallSpawn = Time.time;
@@ -113,6 +122,6 @@ public class SSBallSpawnPoint : MonoBehaviour
         GameObject obj = (GameObject)Instantiate(m_BallPrefabArray[randBallVal], trSpawn.position, trSpawn.rotation);
         obj.transform.parent = SSGameRootCtrl.GetInstance().MissionCleanup;
         SSBallAniCtrl ballAni = obj.GetComponent<SSBallAniCtrl>();
-        ballAni.Init();
+        ballAni.Init(m_PlayerIndex);
     }
 }
