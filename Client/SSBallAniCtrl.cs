@@ -44,7 +44,9 @@ public class SSBallAniCtrl : SSGameMono
         }
 
         GameObject ballObj = (GameObject)Instantiate(m_BallData.m_PuTongBallPrefab, m_BallData.m_BallSpawnTr);
-        m_BallMove.Init(this, ballObj.transform);
+        SSBallMoveCtrl.BallMoveData ballMoveDt = new SSBallMoveCtrl.BallMoveData(SSGameDataCtrl.LanQiuType.PuTong,
+                                                        ballObj.transform, this);
+        m_BallMove.Init(ballMoveDt);
     }
 
     public IEnumerator DelayDestroyThis(float time)

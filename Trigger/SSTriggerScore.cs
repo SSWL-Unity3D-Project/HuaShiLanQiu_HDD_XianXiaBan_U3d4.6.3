@@ -18,11 +18,43 @@ public class SSTriggerScore : MonoBehaviour
         if (ballMove != null && !ballMove.IsDeFenQiu)
         {
             ballMove.IsDeFenQiu = true;
+            bool isKongXiQiu = false;
             if (ballMove.CountOnHit == 0)
             {
+                isKongXiQiu = true;
                 Debug.Log("SSTriggerScore -> KongXinQiu, m_PlayerIndex == " + m_PlayerIndex);
             }
-            SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score += 1;
+
+            int ballScore = 0;
+            switch (ballMove.m_BallMoveData.m_LanQiuType)
+            {
+                case SSGameDataCtrl.LanQiuType.PuTong:
+                    {
+                        if (isKongXiQiu)
+                        {
+                            ballScore = SSGameDataCtrl.GetInstance().m_PuTongBallScoreDt.KongXinQiu;
+                        }
+                        else
+                        {
+                            ballScore = SSGameDataCtrl.GetInstance().m_PuTongBallScoreDt.PuTongQiu;
+                        }
+                        break;
+                    }
+                case SSGameDataCtrl.LanQiuType.HuaShi:
+                    {
+                        if (isKongXiQiu)
+                        {
+                            ballScore = SSGameDataCtrl.GetInstance().m_HuaShiBallScoreDt.KongXinQiu;
+                        }
+                        else
+                        {
+                            ballScore = SSGameDataCtrl.GetInstance().m_HuaShiBallScoreDt.PuTongQiu;
+                        }
+                        break;
+                    }
+            }
+
+            SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score += ballScore;
             Debug.Log("SSTriggerScore -> Score == " + SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score + ", m_PlayerIndex == " + m_PlayerIndex);
         }
     }

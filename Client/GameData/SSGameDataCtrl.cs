@@ -4,6 +4,40 @@ using UnityEngine;
 public class SSGameDataCtrl : MonoBehaviour
 {
     [System.Serializable]
+    public class LanQiuDeFenData
+    {
+        public int PuTongQiu = 1;
+        public int KongXinQiu = 2;
+        public LanQiuDeFenData(int pt, int kx)
+        {
+            PuTongQiu = pt;
+            KongXinQiu = kx;
+        }
+    }
+    /// <summary>
+    /// 普通篮球得分数据.
+    /// </summary>
+    public LanQiuDeFenData m_PuTongBallScoreDt = new LanQiuDeFenData(1, 2);
+    /// <summary>
+    /// 花式篮球得分数据.
+    /// </summary>
+    public LanQiuDeFenData m_HuaShiBallScoreDt = new LanQiuDeFenData(2, 4);
+    /// <summary>
+    /// 烟雾特效球得分倍率.
+    /// </summary>
+    [Range(1, 10)]
+    public int m_YanWuTXBallScoreBL = 2;
+
+    /// <summary>
+    /// 篮球类型.
+    /// </summary>
+    public enum LanQiuType
+    {
+        PuTong = 0,        //普通篮球.
+        HuaShi = 1,        //花式篮球.
+    }
+
+    [System.Serializable]
     public class LanKuangData
     {
         /// <summary>

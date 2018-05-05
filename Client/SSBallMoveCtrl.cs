@@ -5,19 +5,36 @@ public class SSBallMoveCtrl : MonoBehaviour
     public Rigidbody m_Rigidbody;
     [HideInInspector]
     public SSBallAniCtrl m_BallAni;
-    public void Init(SSBallAniCtrl ballAni, Transform realBallTr, float ballMoveSpeedBeiLv = 1f)
+    SSGameDataCtrl.LanQiuType m_LanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
+    public class BallMoveData
+    {
+        public SSGameDataCtrl.LanQiuType m_LanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
+        public Transform m_RealBallTr;
+        public SSBallAniCtrl m_SSBallAni;
+        public bool IsYanWuTXBall = false;
+        public BallMoveData(SSGameDataCtrl.LanQiuType type, Transform tr, SSBallAniCtrl ballAni)
+        {
+            m_LanQiuType = type;
+            m_RealBallTr = tr;
+            m_SSBallAni = ballAni;
+        }
+    }
+    public BallMoveData m_BallMoveData;
+
+    public void Init(BallMoveData ballDt, float ballMoveSpeedBeiLv = 1f)
     {
         IsInitMoveBall = true;
-        m_BallAni = ballAni;
+        m_BallMoveData = ballDt;
+        m_BallAni = ballDt.m_SSBallAni;
         m_BallMoveSpeedBeiLv = ballMoveSpeedBeiLv;
         if (m_Rigidbody != null)
         {
             m_Rigidbody.useGravity = false;
         }
 
-        if (realBallTr != null)
+        if (ballDt.m_RealBallTr != null)
         {
-            realBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
+            ballDt.m_RealBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
         }
     }
 
