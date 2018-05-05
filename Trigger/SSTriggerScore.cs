@@ -28,7 +28,6 @@ public class SSTriggerScore : MonoBehaviour
         SSBallMoveCtrl ballMove = other.GetComponent<SSBallMoveCtrl>();
         if (ballMove != null && !ballMove.IsDeFenQiu)
         {
-            ballMove.m_BallAni.IsStartJiaFenLanQiu = true;
             ballMove.IsDeFenQiu = true;
             bool isKongXiQiu = false;
             if (ballMove.CountOnHit == 0)

@@ -40,20 +40,10 @@ public class SSBallAniCtrl : SSGameMono
     /// </summary>
     [HideInInspector]
     public SSGameDataCtrl.PlayerIndex IndexPlayer;
-    /// <summary>
-    /// 是否为开始加分篮球.
-    /// </summary>
-    [HideInInspector]
-    public bool IsStartJiaFenLanQiu = false;
     public void Init(SSGameDataCtrl.PlayerIndex index)
     {
         //Debug.Log("index == " + index);
         IndexPlayer = index;
-        if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)index].Score > 0)
-        {
-            IsStartJiaFenLanQiu = true;
-        }
-
         bool isYanWuTxBall = SSGameDataCtrl.GetInstance().m_LanKuang[(int)index].m_SSTriggerScore.IsKongXiBallScore;
         if (isYanWuTxBall)
         {
@@ -71,33 +61,29 @@ public class SSBallAniCtrl : SSGameMono
 
     public IEnumerator DelayDestroyThis(float time)
     {
-        SSBallAniCtrl ballAni = this;
-        if (ballAni != null)
+        bool isCreatBall = false;
+        if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].Score > 0)
         {
-            bool isCreatBall = false;
-            if (ballAni.IsStartJiaFenLanQiu)
+            if (m_BallMove != null && !m_BallMove.IsDeFenQiu)
             {
-                if (ballAni.m_BallMove != null && !ballAni.m_BallMove.IsDeFenQiu)
+                int scoreVal = SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].Score;
+                if (scoreVal > 0)
                 {
-                    int scoreVal = SSGameDataCtrl.GetInstance().m_PlayerData[(int)ballAni.IndexPlayer].Score;
-                    if (scoreVal > 0)
-                    {
-                        //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
-                        SSGameDataCtrl.GetInstance().SetActivePlayer(ballAni.IndexPlayer, false);
-                    }
+                    //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
+                    SSGameDataCtrl.GetInstance().SetActivePlayer(IndexPlayer, false);
                 }
             }
-            else
-            {
-                //还没有得分.
-                isCreatBall = true;
-            }
+        }
+        else
+        {
+            //还没有得分.
+            isCreatBall = true;
+        }
 
-            if (isCreatBall)
-            {
-                Debug.Log("DelayDestroyThis -> creat next ball...");
-                SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)ballAni.IndexPlayer].CreatGameBall();
-            }
+        if (isCreatBall)
+        {
+            Debug.Log("DelayDestroyThis -> creat next ball...");
+            SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)IndexPlayer].CreatGameBall();
         }
         yield return new WaitForSeconds(time);
         Destroy(gameObject);
