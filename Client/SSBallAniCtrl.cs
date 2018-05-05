@@ -1,9 +1,29 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class SSBallAniCtrl : MonoBehaviour
+public class SSBallAniCtrl : SSGameMono
 {
+    /// <summary>
+    /// 篮球运动控制脚本.
+    /// </summary>
     public SSBallMoveCtrl m_BallMove;
+    [System.Serializable]
+    public class BallData
+    {
+        /// <summary>
+        /// 普通篮球模型预制.
+        /// </summary>
+        public GameObject m_PuTongBallPrefab;
+        /// <summary>
+        /// 花式篮球模型预制.
+        /// </summary>
+        public GameObject m_HuaShiBallPrefab;
+        /// <summary>
+        /// 篮球产生点.
+        /// </summary>
+        public Transform m_BallSpawnTr;
+    }
+    public BallData m_BallData;
     /// <summary>
     /// 玩家索引.
     /// </summary>
@@ -22,7 +42,9 @@ public class SSBallAniCtrl : MonoBehaviour
         {
             IsStartJiaFenLanQiu = true;
         }
-        m_BallMove.Init(this);
+
+        GameObject ballObj = (GameObject)Instantiate(m_BallData.m_PuTongBallPrefab, m_BallData.m_BallSpawnTr);
+        m_BallMove.Init(this, ballObj.transform);
     }
 
     public IEnumerator DelayDestroyThis(float time)

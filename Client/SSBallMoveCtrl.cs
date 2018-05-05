@@ -2,14 +2,10 @@
 
 public class SSBallMoveCtrl : MonoBehaviour
 {
-    /// <summary>
-    /// 真正篮球模型.
-    /// </summary>
-    public Transform m_RealBallTr;
     public Rigidbody m_Rigidbody;
     [HideInInspector]
     public SSBallAniCtrl m_BallAni;
-    public void Init(SSBallAniCtrl ballAni, float ballMoveSpeedBeiLv = 1f)
+    public void Init(SSBallAniCtrl ballAni, Transform realBallTr, float ballMoveSpeedBeiLv = 1f)
     {
         IsInitMoveBall = true;
         m_BallAni = ballAni;
@@ -19,9 +15,9 @@ public class SSBallMoveCtrl : MonoBehaviour
             m_Rigidbody.useGravity = false;
         }
 
-        if (m_RealBallTr != null)
+        if (realBallTr != null)
         {
-            m_RealBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
+            realBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
         }
     }
 

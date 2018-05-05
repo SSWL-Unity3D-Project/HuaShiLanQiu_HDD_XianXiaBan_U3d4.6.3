@@ -23,45 +23,45 @@ public class SSLanKuangCtrl : MonoBehaviour
     /// <summary>
     /// X轴移动的最大距离.
     /// </summary>
-    [Range(0.1f, 100f)]
-    public float m_DisXMax = 2f;
+    float m_DisXMax = 2f;
     /// <summary>
     /// 篮筐移动的速度.
     /// </summary>
-    [Range(0.01f, 100f)]
-    public float m_SpeedX = 5f;
+    float m_SpeedX = 5f;
     /// <summary>
     /// 篮球碰撞,处理篮网起始不移动的问题.
     /// </summary>
-    public GameObject m_LanQiuCollider;
-    public Vector3 m_LanQiuPos;
+    //public GameObject m_LanQiuCollider;
+    //public Vector3 m_LanQiuPos;
 
-    public void ActiveLanQiuCollider()
-    {
-        m_LanQiuCollider.transform.localPosition = m_LanQiuPos;
-        m_LanQiuCollider.SetActive(true);
-        StartCoroutine(DelayResetLanQiuCollider());
-    }
+    //public void ActiveLanQiuCollider()
+    //{
+        //m_LanQiuCollider.transform.localPosition = m_LanQiuPos;
+        //m_LanQiuCollider.SetActive(true);
+        //StartCoroutine(DelayResetLanQiuCollider());
+    //}
 
-    IEnumerator DelayResetLanQiuCollider()
-    {
-        yield return new WaitForSeconds(1f);
-        ResetLanQiuCollider();
-    }
+    //IEnumerator DelayResetLanQiuCollider()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //    ResetLanQiuCollider();
+    //}
     
-    void ResetLanQiuCollider()
-    {
-        m_LanQiuCollider.SetActive(false);
-        m_LanQiuCollider.transform.localPosition = m_LanQiuPos;
-    }
+    //void ResetLanQiuCollider()
+    //{
+        //m_LanQiuCollider.SetActive(false);
+        //m_LanQiuCollider.transform.localPosition = m_LanQiuPos;
+    //}
     
     void Awake()
     {
-        ResetLanQiuCollider();
+        //ResetLanQiuCollider();
         if (m_SSTriggerScore != null)
         {
             m_SSTriggerScore.m_PlayerIndex = m_PlayerIndex;
         }
+        m_DisXMax = SSGameDataCtrl.GetInstance().m_LanKuangData.m_DisXMax;
+        m_SpeedX = SSGameDataCtrl.GetInstance().m_LanKuangData.m_SpeedX;
 
         InputEventCtrl.GetInstance().OnClickLeftHorBtEvent += OnClickLeftHorBtEvent;
         InputEventCtrl.GetInstance().OnClickRightHorBtEvent += OnClickRightHorBtEvent;

@@ -3,6 +3,22 @@ using UnityEngine;
 
 public class SSGameDataCtrl : MonoBehaviour
 {
+    [System.Serializable]
+    public class LanKuangData
+    {
+        /// <summary>
+        /// X轴移动的最大距离.
+        /// </summary>
+        [Range(0.1f, 100f)]
+        public float m_DisXMax = 2f;
+        /// <summary>
+        /// 篮筐移动的速度.
+        /// </summary>
+        [Range(0.01f, 100f)]
+        public float m_SpeedX = 5f;
+    }
+    public LanKuangData m_LanKuangData;
+
     public enum PlayerIndex
     {
         Player01 = 0,
@@ -62,8 +78,9 @@ public class SSGameDataCtrl : MonoBehaviour
         {
             //重置信息.
             m_PlayerData[(int)index].Score = 0;
-            m_LanKuang[(int)index].ActiveLanQiuCollider();
+            //m_LanKuang[(int)index].ActiveLanQiuCollider();
         }
+        pcvr.GetInstance().SetIndexPlayerActiveGameState((int)index, (byte)(isActive == true ? 1 : 0));
     }
 
     /// <summary>
