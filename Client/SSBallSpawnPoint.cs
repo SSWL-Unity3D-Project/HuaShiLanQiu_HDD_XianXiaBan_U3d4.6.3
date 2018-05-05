@@ -35,11 +35,6 @@ public class SSBallSpawnPoint : MonoBehaviour
     /// </summary>
     public Transform[] m_SpawnPointTrArray;
 
-    void Start()
-    {
-        m_TimeMinLianFa = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinLianFa;
-    }
-
     /// <summary>
     /// 初始化连发球信息.
     /// </summary>
@@ -63,6 +58,7 @@ public class SSBallSpawnPoint : MonoBehaviour
             }
             Debug.Log("InitLianFaBallInfo -> m_LianFaBallNum == " + m_LianFaBallNum + ", player == " + m_PlayerIndex);
 
+            m_TimeMinLianFa = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].m_TimeMinLianFa;
             int maxPointVal = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].MaxIndex;
             if (maxPointVal == 0 || maxPointVal > m_SpawnPointTrArray.Length)
             {

@@ -73,7 +73,9 @@ public class SSTriggerScore : MonoBehaviour
                 ballScore *= SSGameDataCtrl.GetInstance().m_YanWuTXBallScoreBL;
             }
             SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score += ballScore;
-            Debug.Log("SSTriggerScore -> Score == " + SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score + ", m_PlayerIndex == " + m_PlayerIndex);
+            Debug.Log("SSTriggerScore -> Score == " + SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score
+                + ", addScore == " + ballScore
+                + ", m_PlayerIndex == " + m_PlayerIndex);
             
             bool isCreatBall = true;
             if (ballMove.IsLianFaQiu && !ballMove.IsLianFaQiu)

@@ -34,6 +34,11 @@ public class SSGameDataCtrl : MonoBehaviour
         [Range(0f, 1f)]
         public float LianFaBallNum02 = 0.5f;
         /// <summary>
+        /// 连发球间隔最短时间控制.
+        /// </summary>
+        [Range(0.03f, 10f)]
+        public float m_TimeMinLianFa = 0.3f;
+        /// <summary>
         /// 普通球的概率.
         /// </summary>
         [Range(0f, 1f)]
@@ -48,26 +53,6 @@ public class SSGameDataCtrl : MonoBehaviour
     /// 控制产生篮球的组件.
     /// </summary>
     public SSBallSpawnPoint[] m_BallSpawnArray = new SSBallSpawnPoint[2];
-    [System.Serializable]
-    public class BallSpawnData
-    {
-        /// <summary>
-        /// 产生篮球的间隔时间控制.
-        /// </summary>
-        //[Range(0.03f, 10f)]
-        //public float m_TimeMinSpawn = 2f;
-        /// <summary>
-        /// 连发球间隔最短时间控制.
-        /// </summary>
-        [Range(0.03f, 10f)]
-        public float m_TimeMinLianFa = 0.3f;
-        //public int m_MaxLianFaBallNum = 5;
-        //public int m_MinLianFaBallNum = 2;
-    }
-    /// <summary>
-    /// 篮球产生的数据信息.
-    /// </summary>
-    public BallSpawnData m_BallSpawnData;
 
     [System.Serializable]
     public class LanQiuDeFenData
