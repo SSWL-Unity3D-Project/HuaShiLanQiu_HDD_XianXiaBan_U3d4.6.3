@@ -5,18 +5,21 @@ public class SSBallMoveCtrl : MonoBehaviour
     public Rigidbody m_Rigidbody;
     [HideInInspector]
     public SSBallAniCtrl m_BallAni;
-    SSGameDataCtrl.LanQiuType m_LanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
     public class BallMoveData
     {
         public SSGameDataCtrl.LanQiuType m_LanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
         public Transform m_RealBallTr;
         public SSBallAniCtrl m_SSBallAni;
+        /// <summary>
+        /// 是否为烟雾特效篮球.
+        /// </summary>
         public bool IsYanWuTXBall = false;
-        public BallMoveData(SSGameDataCtrl.LanQiuType type, Transform tr, SSBallAniCtrl ballAni)
+        public BallMoveData(SSGameDataCtrl.LanQiuType type, Transform tr, SSBallAniCtrl ballAni, bool isYanWuBall)
         {
             m_LanQiuType = type;
             m_RealBallTr = tr;
             m_SSBallAni = ballAni;
+            IsYanWuTXBall = isYanWuBall;
         }
     }
     public BallMoveData m_BallMoveData;

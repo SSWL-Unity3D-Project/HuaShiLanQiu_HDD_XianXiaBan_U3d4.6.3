@@ -24,6 +24,17 @@ public class SSBallAniCtrl : SSGameMono
         public Transform m_BallSpawnTr;
     }
     public BallData m_BallData;
+
+    [System.Serializable]
+    public class YanWuTXData
+    {
+        /// <summary>
+        /// 烟雾特效预制.
+        /// </summary>
+        public GameObject m_YanWuTXPrefab;
+        public Transform m_YanWuTXSpawnTr;
+    }
+    public YanWuTXData m_YanWuTXDt;
     /// <summary>
     /// 玩家索引.
     /// </summary>
@@ -43,9 +54,18 @@ public class SSBallAniCtrl : SSGameMono
             IsStartJiaFenLanQiu = true;
         }
 
+        bool isYanWuTxBall = SSGameDataCtrl.GetInstance().m_LanKuang[(int)index].m_SSTriggerScore.IsKongXiBallScore;
+        if (isYanWuTxBall)
+        {
+            if (m_YanWuTXDt.m_YanWuTXPrefab != null && m_YanWuTXDt.m_YanWuTXSpawnTr != null)
+            {
+                //产生烟雾特效.
+                Instantiate(m_YanWuTXDt.m_YanWuTXPrefab, m_YanWuTXDt.m_YanWuTXSpawnTr);
+            }
+        }
         GameObject ballObj = (GameObject)Instantiate(m_BallData.m_PuTongBallPrefab, m_BallData.m_BallSpawnTr);
         SSBallMoveCtrl.BallMoveData ballMoveDt = new SSBallMoveCtrl.BallMoveData(SSGameDataCtrl.LanQiuType.PuTong,
-                                                        ballObj.transform, this);
+                                                        ballObj.transform, this, isYanWuTxBall);
         m_BallMove.Init(ballMoveDt);
     }
 

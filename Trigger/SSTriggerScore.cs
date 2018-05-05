@@ -7,6 +7,17 @@ public class SSTriggerScore : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public SSGameDataCtrl.PlayerIndex m_PlayerIndex;
+    /// <summary>
+    /// 是否为空心球得分.
+    /// </summary>
+    [HideInInspector]
+    public bool IsKongXiBallScore = false;
+
+    public void Init()
+    {
+        IsKongXiBallScore = false;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
@@ -24,6 +35,7 @@ public class SSTriggerScore : MonoBehaviour
                 isKongXiQiu = true;
                 Debug.Log("SSTriggerScore -> KongXinQiu, m_PlayerIndex == " + m_PlayerIndex);
             }
+            IsKongXiBallScore = isKongXiQiu;
 
             int ballScore = 0;
             switch (ballMove.m_BallMoveData.m_LanQiuType)
@@ -52,6 +64,12 @@ public class SSTriggerScore : MonoBehaviour
                         }
                         break;
                     }
+            }
+
+            if (ballMove.m_BallMoveData.IsYanWuTXBall)
+            {
+                //烟雾特效篮球分数加倍.
+                ballScore *= SSGameDataCtrl.GetInstance().m_YanWuTXBallScoreBL;
             }
 
             SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score += ballScore;

@@ -112,7 +112,7 @@ public class SSGameDataCtrl : MonoBehaviour
         {
             //重置信息.
             m_PlayerData[(int)index].Score = 0;
-            //m_LanKuang[(int)index].ActiveLanQiuCollider();
+            m_LanKuang[(int)index].m_SSTriggerScore.Init();
         }
         pcvr.GetInstance().SetIndexPlayerActiveGameState((int)index, (byte)(isActive == true ? 1 : 0));
     }
