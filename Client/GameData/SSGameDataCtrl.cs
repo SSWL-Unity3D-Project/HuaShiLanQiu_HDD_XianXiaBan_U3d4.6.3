@@ -4,6 +4,27 @@ using UnityEngine;
 public class SSGameDataCtrl : MonoBehaviour
 {
     [System.Serializable]
+    public class BallSpawnData
+    {
+        /// <summary>
+        /// 产生篮球的间隔时间控制.
+        /// </summary>
+        [Range(0.03f, 10f)]
+        public float m_TimeMinSpawn = 2f;
+        /// <summary>
+        /// 连发球间隔最短时间控制.
+        /// </summary>
+        [Range(0.03f, 10f)]
+        public float m_TimeMinLianFa = 0.3f;
+        public int m_MaxLianFaBallNum = 5;
+        public int m_MinLianFaBallNum = 2;
+    }
+    /// <summary>
+    /// 篮球产生的数据信息.
+    /// </summary>
+    public BallSpawnData m_BallSpawnData;
+
+    [System.Serializable]
     public class LanQiuDeFenData
     {
         public int PuTongQiu = 1;

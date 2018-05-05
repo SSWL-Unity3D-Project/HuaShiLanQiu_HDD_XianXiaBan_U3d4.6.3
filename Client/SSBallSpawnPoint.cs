@@ -14,15 +14,15 @@ public class SSBallSpawnPoint : MonoBehaviour
     /// 产生篮球的间隔时间控制.
     /// </summary>
     [Range(0.03f, 10f)]
-    public float m_TimeMinSpawn = 2f;
+    float m_TimeMinSpawn = 2f;
     float m_TimeBallSpawnRecord = 0f;
     /// <summary>
     /// 连发球间隔最短时间控制.
     /// </summary>
     [Range(0.03f, 10f)]
-    public float m_TimeMinLianFa = 0.3f;
-    public int m_MaxLianFaBallNum = 5;
-    public int m_MinLianFaBallNum = 2;
+    float m_TimeMinLianFa = 0.3f;
+    int m_MaxLianFaBallNum = 5;
+    int m_MinLianFaBallNum = 2;
     int m_LianFaBallNum = 3;
     int m_LianFaBallCount = 0;
     /// <summary>
@@ -38,6 +38,11 @@ public class SSBallSpawnPoint : MonoBehaviour
     float m_TimeLastBallSpawn = 0f;
     void Start()
     {
+        m_TimeMinSpawn = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinSpawn;
+        m_TimeMinLianFa = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinLianFa;
+        m_MaxLianFaBallNum = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_MaxLianFaBallNum;
+        m_MinLianFaBallNum = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_MinLianFaBallNum;
+
         m_TimeBallSpawnRecord = m_TimeMinSpawn;
         m_TimeDownCom = gameObject.AddComponent<SSTimeDownCtrl>();
         m_TimeDownCom.Init(3600f, 3f);
