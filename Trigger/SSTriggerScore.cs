@@ -28,6 +28,7 @@ public class SSTriggerScore : MonoBehaviour
         SSBallMoveCtrl ballMove = other.GetComponent<SSBallMoveCtrl>();
         if (ballMove != null && !ballMove.IsDeFenQiu)
         {
+            ballMove.m_BallAni.IsStartJiaFenLanQiu = true;
             ballMove.IsDeFenQiu = true;
             bool isKongXiQiu = false;
             if (ballMove.CountOnHit == 0)
@@ -71,9 +72,15 @@ public class SSTriggerScore : MonoBehaviour
                 //烟雾特效篮球分数加倍.
                 ballScore *= SSGameDataCtrl.GetInstance().m_YanWuTXBallScoreBL;
             }
-
             SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score += ballScore;
             Debug.Log("SSTriggerScore -> Score == " + SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score + ", m_PlayerIndex == " + m_PlayerIndex);
+            
+            bool isCreatBall = true;
+            if (isCreatBall)
+            {
+                Debug.Log("SSTriggerScore -> creat next ball...");
+                SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)m_PlayerIndex].CreatGameBall();
+            }
         }
     }
 }

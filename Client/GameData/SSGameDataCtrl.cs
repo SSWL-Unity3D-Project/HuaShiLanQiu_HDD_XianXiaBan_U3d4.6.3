@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SSGameDataCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 控制产生篮球的组件.
+    /// </summary>
+    public SSBallSpawnPoint[] m_BallSpawnArray = new SSBallSpawnPoint[2];
     [System.Serializable]
     public class BallSpawnData
     {
@@ -134,6 +138,7 @@ public class SSGameDataCtrl : MonoBehaviour
             //重置信息.
             m_PlayerData[(int)index].Score = 0;
             m_LanKuang[(int)index].m_SSTriggerScore.Init();
+            m_BallSpawnArray[(int)index].CreatGameBall();
         }
         pcvr.GetInstance().SetIndexPlayerActiveGameState((int)index, (byte)(isActive == true ? 1 : 0));
     }

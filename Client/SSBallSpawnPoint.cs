@@ -34,8 +34,12 @@ public class SSBallSpawnPoint : MonoBehaviour
     /// </summary>
     bool IsLianFaBall = false;
     SSTimeDownCtrl m_TimeDownCom;
-
     float m_TimeLastBallSpawn = 0f;
+    /// <summary>
+    /// 产生点数组.
+    /// </summary>
+    public Transform[] m_SpawnPointTrArray;
+
     void Start()
     {
         m_TimeMinSpawn = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinSpawn;
@@ -68,35 +72,42 @@ public class SSBallSpawnPoint : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
-        {
-            return;
-        }
+ //   void Update()
+ //   {
+ //       if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
+ //       {
+ //           return;
+ //       }
 
-        if (Time.time - m_TimeLastBallSpawn >= m_TimeMinSpawn)
-        {
-            m_TimeLastBallSpawn = Time.time;
-            if (IsLianFaBall)
-            {
-                //连续发射篮球.
-                SpawnGameBall(m_IndexLianFaSpawn);
-                m_LianFaBallCount++;
-                if (m_LianFaBallCount >= m_LianFaBallNum)
-                {
-                    IsLianFaBall = false;
-                    m_TimeMinSpawn = m_TimeBallSpawnRecord;
-                }
-            }
-            else
-            {
-                SpawnGameBall();
-            }
-        }
-	}
-    
-    public Transform[] m_SpawnPointTrArray;
+ //       if (Time.time - m_TimeLastBallSpawn >= m_TimeMinSpawn)
+ //       {
+ //           m_TimeLastBallSpawn = Time.time;
+ //           if (IsLianFaBall)
+ //           {
+ //               //连续发射篮球.
+ //               SpawnGameBall(m_IndexLianFaSpawn);
+ //               m_LianFaBallCount++;
+ //               if (m_LianFaBallCount >= m_LianFaBallNum)
+ //               {
+ //                   IsLianFaBall = false;
+ //                   m_TimeMinSpawn = m_TimeBallSpawnRecord;
+ //               }
+ //           }
+ //           else
+ //           {
+ //               SpawnGameBall();
+ //           }
+ //       }
+	//}
+
+    /// <summary>
+    /// 创建篮球.
+    /// </summary>
+    public void CreatGameBall()
+    {
+        SpawnGameBall();
+    }
+
     void SpawnGameBall(int indexBallSpawn = -1)
     {
         if (m_BallPrefabArray.Length <= 0)

@@ -71,17 +71,32 @@ public class SSBallAniCtrl : SSGameMono
 
     public IEnumerator DelayDestroyThis(float time)
     {
-        SSBallAniCtrl ballAni = GetComponent<SSBallAniCtrl>();
+        SSBallAniCtrl ballAni = this;
         if (ballAni != null)
         {
-            if (ballAni.IsStartJiaFenLanQiu && ballAni.m_BallMove != null && !ballAni.m_BallMove.IsDeFenQiu)
+            bool isCreatBall = false;
+            if (ballAni.IsStartJiaFenLanQiu)
             {
-                int scoreVal = SSGameDataCtrl.GetInstance().m_PlayerData[(int)ballAni.IndexPlayer].Score;
-                if (scoreVal > 0)
+                if (ballAni.m_BallMove != null && !ballAni.m_BallMove.IsDeFenQiu)
                 {
-                    //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
-                    SSGameDataCtrl.GetInstance().SetActivePlayer(ballAni.IndexPlayer, false);
+                    int scoreVal = SSGameDataCtrl.GetInstance().m_PlayerData[(int)ballAni.IndexPlayer].Score;
+                    if (scoreVal > 0)
+                    {
+                        //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
+                        SSGameDataCtrl.GetInstance().SetActivePlayer(ballAni.IndexPlayer, false);
+                    }
                 }
+            }
+            else
+            {
+                //还没有得分.
+                isCreatBall = true;
+            }
+
+            if (isCreatBall)
+            {
+                Debug.Log("DelayDestroyThis -> creat next ball...");
+                SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)ballAni.IndexPlayer].CreatGameBall();
             }
         }
         yield return new WaitForSeconds(time);
