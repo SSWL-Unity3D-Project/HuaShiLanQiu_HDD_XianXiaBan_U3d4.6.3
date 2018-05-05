@@ -32,8 +32,9 @@ public class SSTriggerScore : MonoBehaviour
             bool isKongXiQiu = false;
             if (ballMove.CountOnHit == 0)
             {
-                isKongXiQiu = true;
                 Debug.Log("SSTriggerScore -> KongXinQiu, m_PlayerIndex == " + m_PlayerIndex);
+                isKongXiQiu = true;
+                SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)m_PlayerIndex].CheckIsPlayLianFaQiu();
             }
             IsKongXiBallScore = isKongXiQiu;
 
@@ -75,6 +76,18 @@ public class SSTriggerScore : MonoBehaviour
             Debug.Log("SSTriggerScore -> Score == " + SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].Score + ", m_PlayerIndex == " + m_PlayerIndex);
             
             bool isCreatBall = true;
+            if (ballMove.IsLianFaQiu && !ballMove.IsLianFaQiu)
+            {
+                //是连发球,单不是最后一个连发球,所以不去创建篮球.
+                isCreatBall = false;
+            }
+
+            if (SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)m_PlayerIndex].IsLianFaBall)
+            {
+                //准备进行连发球.
+                isCreatBall = false;
+            }
+
             if (isCreatBall)
             {
                 Debug.Log("SSTriggerScore -> creat next ball...");

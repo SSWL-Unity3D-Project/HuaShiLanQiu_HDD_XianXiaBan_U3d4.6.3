@@ -2,6 +2,16 @@
 
 public class SSBallMoveCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 是否为连发球.
+    /// </summary>
+    [HideInInspector]
+    public bool IsLianFaQiu = false;
+    /// <summary>
+    /// 是否为最后一个连发球.
+    /// </summary>
+    [HideInInspector]
+    public bool IsLastLianFaQiu = false;
     public Rigidbody m_Rigidbody;
     [HideInInspector]
     public SSBallAniCtrl m_BallAni;

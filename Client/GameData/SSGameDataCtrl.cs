@@ -1,8 +1,49 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SSGameDataCtrl : MonoBehaviour
 {
+    /// <summary>
+    /// 篮球创建规则数据.
+    /// </summary>
+    [System.Serializable]
+    public class BallCreatRuleData
+    {
+        /// <summary>
+        /// 在产生点中的最大索引.
+        /// MaxIndex == 0 或 大于产生点最大数量时在整个产生点数组里随机取点.
+        /// </summary>
+        [Range(0, 100)]
+        public int MaxIndex = 0;
+        /// <summary>
+        /// 发球的间隔时间.
+        /// </summary>
+        public float TimeVal = 15f;
+        /// <summary>
+        /// 篮球运动速度的倍率控制.
+        /// </summary>
+        [Range(0.1f, 10f)]
+        public float BallSpeedBeiLv = 1f;
+        /// <summary>
+        /// 连发球的概率.
+        /// </summary>
+        [Range(0f, 1f)]
+        public float LianFaBall = 0.5f;
+        /// <summary>
+        /// 连发2球的概率.
+        /// </summary>
+        [Range(0f, 1f)]
+        public float LianFaBallNum02 = 0.5f;
+        /// <summary>
+        /// 普通球的概率.
+        /// </summary>
+        [Range(0f, 1f)]
+        public float PuTongBall = 0.5f;
+    }
+    /// <summary>
+    /// 创建篮球的规则数据列表.
+    /// </summary>
+    public BallCreatRuleData[] m_BallCreatRule = new BallCreatRuleData[3];
+
     /// <summary>
     /// 控制产生篮球的组件.
     /// </summary>
@@ -13,15 +54,15 @@ public class SSGameDataCtrl : MonoBehaviour
         /// <summary>
         /// 产生篮球的间隔时间控制.
         /// </summary>
-        [Range(0.03f, 10f)]
-        public float m_TimeMinSpawn = 2f;
+        //[Range(0.03f, 10f)]
+        //public float m_TimeMinSpawn = 2f;
         /// <summary>
         /// 连发球间隔最短时间控制.
         /// </summary>
         [Range(0.03f, 10f)]
         public float m_TimeMinLianFa = 0.3f;
-        public int m_MaxLianFaBallNum = 5;
-        public int m_MinLianFaBallNum = 2;
+        //public int m_MaxLianFaBallNum = 5;
+        //public int m_MinLianFaBallNum = 2;
     }
     /// <summary>
     /// 篮球产生的数据信息.
@@ -139,6 +180,7 @@ public class SSGameDataCtrl : MonoBehaviour
             m_PlayerData[(int)index].Score = 0;
             m_LanKuang[(int)index].m_SSTriggerScore.Init();
             m_BallSpawnArray[(int)index].CreatGameBall();
+            m_BallSpawnArray[(int)index].Init();
         }
         pcvr.GetInstance().SetIndexPlayerActiveGameState((int)index, (byte)(isActive == true ? 1 : 0));
     }
