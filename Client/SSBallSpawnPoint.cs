@@ -11,18 +11,10 @@ public class SSBallSpawnPoint : MonoBehaviour
     /// </summary>
     public GameObject[] m_BallPrefabArray;
     /// <summary>
-    /// 产生篮球的间隔时间控制.
-    /// </summary>
-    //[Range(0.03f, 10f)]
-    //float m_TimeMinSpawn = 2f;
-    //float m_TimeBallSpawnRecord = 0f;
-    /// <summary>
     /// 连发球间隔最短时间控制.
     /// </summary>
     [Range(0.03f, 10f)]
     float m_TimeMinLianFa = 0.3f;
-    //int m_MaxLianFaBallNum = 5;
-    //int m_MinLianFaBallNum = 2;
     /// <summary>
     /// 连发球的数量.
     /// </summary>
@@ -37,7 +29,6 @@ public class SSBallSpawnPoint : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public bool IsLianFaBall = false;
-    //SSTimeDownCtrl m_TimeDownCom;
     float m_TimeLastBallSpawn = 0f;
     /// <summary>
     /// 产生点数组.
@@ -46,15 +37,7 @@ public class SSBallSpawnPoint : MonoBehaviour
 
     void Start()
     {
-        //m_TimeMinSpawn = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinSpawn;
         m_TimeMinLianFa = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_TimeMinLianFa;
-        //m_MaxLianFaBallNum = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_MaxLianFaBallNum;
-        //m_MinLianFaBallNum = SSGameDataCtrl.GetInstance().m_BallSpawnData.m_MinLianFaBallNum;
-
-        //m_TimeBallSpawnRecord = m_TimeMinSpawn;
-        //m_TimeDownCom = gameObject.AddComponent<SSTimeDownCtrl>();
-        //m_TimeDownCom.Init(3600f, 3f);
-        //m_TimeDownCom.OnTimeDownStepEvent += OnTimeDownStepLianFaBallEvent;
     }
 
     /// <summary>
@@ -64,10 +47,8 @@ public class SSBallSpawnPoint : MonoBehaviour
     {
         if (!IsLianFaBall)
         {
-            Debug.Log("InitLianFaBallInfo...");
             IsLianFaBall = true;
             m_LianFaBallCount = 0;
-            //m_TimeMinSpawn = m_TimeMinLianFa;
 
             float randVal = Random.Range(0f, 100f) / 100f;
             if (randVal < SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].LianFaBallNum02)
@@ -80,6 +61,7 @@ public class SSBallSpawnPoint : MonoBehaviour
                 //连发3球.
                 m_LianFaBallNum = 3;
             }
+            Debug.Log("InitLianFaBallInfo -> m_LianFaBallNum == " + m_LianFaBallNum + ", player == " + m_PlayerIndex);
 
             int maxPointVal = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].MaxIndex;
             if (maxPointVal == 0 || maxPointVal > m_SpawnPointTrArray.Length)
