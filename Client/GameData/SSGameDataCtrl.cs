@@ -164,8 +164,8 @@ public class SSGameDataCtrl : MonoBehaviour
             //重置信息.
             m_PlayerData[(int)index].Score = 0;
             m_LanKuang[(int)index].m_SSTriggerScore.Init();
-            m_BallSpawnArray[(int)index].CreatGameBall();
             m_BallSpawnArray[(int)index].Init();
+            m_BallSpawnArray[(int)index].CreatGameBall();
         }
         pcvr.GetInstance().SetIndexPlayerActiveGameState((int)index, (byte)(isActive == true ? 1 : 0));
     }
