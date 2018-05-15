@@ -3,6 +3,10 @@
 public class SSGameDataCtrl : MonoBehaviour
 {
     /// <summary>
+    /// 游戏UI总控制.
+    /// </summary>
+    public SSUIRootCtrl m_SSUIRoot;
+    /// <summary>
     /// 篮球创建规则数据.
     /// </summary>
     [System.Serializable]
