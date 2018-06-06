@@ -16,4 +16,34 @@ public class SSGameMono : MonoBehaviour
         }
         return obj;
     }
+
+    public void UnityLog(object msg)
+    {
+        Debug.Log("Unity: " + msg);
+    }
+
+    public void UnityLogWarning(object msg)
+    {
+        Debug.LogWarning("Unity: " + msg);
+    }
+
+    public void UnityLogError(object msg)
+    {
+        Debug.LogError("Unity: " + msg);
+    }
+
+    /// <summary>
+    /// 动画结束事件.
+    /// </summary>
+    public void OnEndAnimationEvent()
+    {
+        OnEndAnimationTrigger();
+    }
+
+    /// <summary>
+    /// 动画结束事件触发器.
+    /// </summary>
+    public virtual void OnEndAnimationTrigger()
+    {
+    }
 }

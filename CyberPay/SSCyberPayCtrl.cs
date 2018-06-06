@@ -7,5 +7,6 @@ public class SSCyberPayCtrl : MonoBehaviour
     void Start()
     {
         //CyberPaySDK payCyber = new CyberPaySDK();
+        //AndroidJavaClass ajc = new AndroidJavaClass("com.cybercloud.sdk.cyberpay");
     }
 }

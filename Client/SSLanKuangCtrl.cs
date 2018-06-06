@@ -35,9 +35,19 @@ public class SSLanKuangCtrl : MonoBehaviour
         }
         m_DisXMax = SSGameDataCtrl.GetInstance().m_LanKuangData.m_DisXMax;
         m_SpeedX = SSGameDataCtrl.GetInstance().m_LanKuangData.m_SpeedX;
+        SetActiveRealBallKuang(false);
 
         InputEventCtrl.GetInstance().OnClickLeftHorBtEvent += OnClickLeftHorBtEvent;
         InputEventCtrl.GetInstance().OnClickRightHorBtEvent += OnClickRightHorBtEvent;
+    }
+
+    public void SetActiveRealBallKuang(bool isActive)
+    {
+        m_RealKuangTr.gameObject.SetActive(isActive);
+        if (!isActive)
+        {
+            m_RealKuangTr.localPosition = Vector3.zero;
+        }
     }
 
     private void OnClickLeftHorBtEvent(SSGameDataCtrl.PlayerIndex index, InputEventCtrl.ButtonState val)
@@ -217,7 +227,8 @@ public class SSLanKuangCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
+        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame
+            || !SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsCreateGameBall)
         {
             return;
         }

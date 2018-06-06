@@ -12,15 +12,25 @@ public class InputEventCtrl : MonoBehaviour
     public enum InputDevice
     {
         Null = -1,
-        PC = 0,        //电脑键盘鼠标.
-        HDD = 1,       //红点点微信手柄.
+        /// <summary>
+        /// 电脑键盘鼠标.
+        /// </summary>
+        PC = 0,
+        /// <summary>
+        /// 红点点微信手柄.
+        /// </summary>
+        HDD = 1,
     }
+    InputDevice _InputDevice = InputDevice.Null;
     /// <summary>
     /// 输入设备枚举.
     /// </summary>
-    InputDevice _InputDevice = InputDevice.PC;
     [HideInInspector]
-    public InputDevice m_InputDevice { get { return _InputDevice; } }
+    public InputDevice m_InputDevice
+    {
+        set { _InputDevice = value; }
+        get { return _InputDevice; }
+    }
 
     static private InputEventCtrl _Instance = null;
     static public InputEventCtrl GetInstance()
@@ -29,9 +39,15 @@ public class InputEventCtrl : MonoBehaviour
         {
             GameObject obj = new GameObject("_InputEventCtrl");
             _Instance = obj.AddComponent<InputEventCtrl>();
+            _Instance.Init();
             pcvr.GetInstance();
         }
         return _Instance;
+    }
+
+    void Init()
+    {
+        m_InputDevice = pcvr.m_InputDevice;
     }
 
     public delegate void EventHandel(SSGameDataCtrl.PlayerIndex index, ButtonState val);

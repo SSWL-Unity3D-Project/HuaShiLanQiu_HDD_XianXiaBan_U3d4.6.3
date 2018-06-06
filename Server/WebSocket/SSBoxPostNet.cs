@@ -1,19 +1,57 @@
 ﻿using LitJson;
 using System;
 using System.Collections;
+using System.Net.NetworkInformation;
 using System.Text;
 using UnityEngine;
 
 public class SSBoxPostNet : MonoBehaviour
 {
-    void Start()
+    public enum GamePadState
     {
+        Default,                //默认手柄.
+        LeiTingZhanChe,         //雷霆战车手柄.
+    }
+    /// <summary>
+    /// 游戏手柄枚举.
+    /// </summary>
+    [HideInInspector]
+    public GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
+
+    public void Init()
+    {
+        //NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+        //foreach (NetworkInterface ni in nis)
+        //{
+        //    Debug.Log("Name = " + ni.Name);
+        //    Debug.Log("Des = " + ni.Description);
+        //    Debug.Log("Type = " + ni.NetworkInterfaceType.ToString());
+        //    Debug.Log("Mac地址 = " + ni.GetPhysicalAddress().ToString());
+        //    Debug.Log("------------------------------------------------");
+        //    m_BoxLoginData.boxNumber = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + ni.GetPhysicalAddress().ToString();
+        //    break;
+        //}
+
+        string ip = Network.player.ipAddress;
+        ip = ip.Replace('.', (char)UnityEngine.Random.Range(97, 122));
+        int indexStart = UnityEngine.Random.Range(0, 5);
+        int strLen = ip.Length - indexStart;
+        strLen = strLen > 8 ? 8 : strLen;
+        ip = ip.Substring(indexStart, strLen);
+
+        string key = ip + (char)UnityEngine.Random.Range(97, 122)
+            + (DateTime.Now.Ticks % 999999).ToString();
+        string boxNum = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + key;
+        boxNum = boxNum.Length > 40 ? boxNum.Substring(0, 39) : boxNum;
+        m_BoxLoginData.boxNumber = boxNum;
+        Debug.Log("boxNumber == " + m_BoxLoginData.boxNumber);
+
         if (m_WebSocketSimpet != null)
         {
             m_WebSocketSimpet.Init(this);
         }
         HttpSendPostLoginBox();
-        //Debug.Log("md5: " + Md5Sum("23456sswl"));
+        //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
     }
     
     /// <summary>
@@ -43,11 +81,11 @@ public class SSBoxPostNet : MonoBehaviour
         yield return getData;
         if (getData.error != null)
         {
-            Debug.Log("GetError: " + getData.error);
+            Debug.Log("Unity:"+"GetError: " + getData.error);
         }
         else
         {
-            Debug.Log("GetData: " + getData.text);
+            Debug.Log("Unity:"+"GetData: " + getData.text);
         }
     }
 
@@ -77,12 +115,44 @@ public class SSBoxPostNet : MonoBehaviour
     public class BoxLoginData
     {
         public string url = "http://game.hdiandian.com/gameBox/logon";
-        public string boxNumber = "1";              //盒子编号.
+        string _boxNumber = "1";
+        /// <summary>
+        /// 盒子编号(必须全是小写字母加数字).
+        /// </summary>
+        public string boxNumber
+        {
+            set
+            {
+                _boxNumber = value.ToLower();
+                //設置紅點點遊戲手柄的url.
+                string url = _hDianDianGamePadUrl + _boxNumber;
+                hDianDianGamePadUrl = url;
+            }
+            get
+            {
+                //Debug.LogWarning("_boxNumber == " + _boxNumber);
+                return _boxNumber;
+            }
+        }
         public string storeId = "150";              //商户id.
         public string channel = "CyberCloud";       //渠道.
         public string gameId = "16";                //游戏id.
+
+        string _hDianDianGamePadUrl = "http://game.hdiandian.com/gamepad/index.html?boxNumber=";
+        /// <summary>
+        /// 紅點點遊戲手柄的url.
+        /// </summary>
+        public string hDianDianGamePadUrl = "http://game.hdiandian.com/gamepad/index.html?boxNumber=1";
+        public BoxLoginData(string address, string idGame)
+        {
+            gameId = idGame;
+            url = address + "/gameBox/logon";
+            _hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=";
+            hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=1";
+        }
     }
-    public BoxLoginData m_BoxLoginData = new BoxLoginData();
+    public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.
+    //public BoxLoginData m_BoxLoginData = new BoxLoginData("http://h5.hdiandian.com", "17"); //雷霆战车游戏正式号.
 
     /// <summary>
     /// 盒子登陆成功后返回的数据信息.
@@ -104,11 +174,11 @@ public class SSBoxPostNet : MonoBehaviour
         yield return postData;
         if (postData.error != null)
         {
-            Debug.Log("PostError: " + postData.error);
+            Debug.Log("Unity:"+"PostError: " + postData.error);
         }
         else
         {
-            Debug.Log(cmd + " -> PostData: " + postData.text);
+            Debug.Log("Unity:"+cmd + " -> PostData: " + postData.text);
             switch(cmd)
             {
                 case PostCmd.BoxLogin:
@@ -119,12 +189,12 @@ public class SSBoxPostNet : MonoBehaviour
                         {
                             m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
                             m_BoxLoginDt.token = jd["data"]["token"].ToString();
-                            Debug.Log("serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
+                            Debug.Log("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
                             ConnectWebSocketServer();
                         }
                         else
                         {
-                            Debug.Log("Login box failed! code == " + jd["code"]);
+                            Debug.Log("Unity:"+"Login box failed! code == " + jd["code"]);
                         }
                         break;
                     }
@@ -143,12 +213,12 @@ public class SSBoxPostNet : MonoBehaviour
     {
         if (m_BoxLoginRt != BoxLoginRt.Success)
         {
-            Debug.Log("ConnectWebSocket -> m_BoxLoginRt == " + m_BoxLoginRt);
+            Debug.Log("Unity:"+"ConnectWebSocket -> m_BoxLoginRt == " + m_BoxLoginRt);
             return;
         }
 
         string url = "ws://" + m_BoxLoginDt.serverIp + "/websocket.do?token=" + m_BoxLoginDt.token;
-        Debug.Log("ConnectWebSocket -> url " + url);
+        Debug.Log("Unity:"+"ConnectWebSocket -> url " + url);
         if (m_WebSocketSimpet != null)
         {
             m_WebSocketSimpet.OpenWebSocket(url);
@@ -160,7 +230,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public void HttpSendPostLoginBox()
     {
-        Debug.Log("HttpSendPostLoginBox...");
+        Debug.Log("Unity:"+"HttpSendPostLoginBox...");
         //POST方法.
         WWWForm form = new WWWForm();
         form.AddField("boxNumber", m_BoxLoginData.boxNumber);

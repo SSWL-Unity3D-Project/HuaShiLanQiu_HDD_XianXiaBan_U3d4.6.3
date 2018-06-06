@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SSBallMoveCtrl : MonoBehaviour
+public class SSBallMoveCtrl : SSGameMono
 {
     /// <summary>
     /// 是否为连发球.
@@ -34,6 +34,14 @@ public class SSBallMoveCtrl : MonoBehaviour
     }
     public BallMoveData m_BallMoveData;
 
+    void Start()
+    {
+        if (!IsInitMoveBall)
+        {
+            UnityLogWarning("Should be hidden the ball!");
+        }
+    }
+
     public void Init(BallMoveData ballDt, float ballMoveSpeedBeiLv = 1f)
     {
         IsInitMoveBall = true;
@@ -56,8 +64,29 @@ public class SSBallMoveCtrl : MonoBehaviour
     /// 篮球运动速度倍率控制.
     /// </summary>
     float m_BallMoveSpeedBeiLv = 1f;
+    bool IsRemoveSelf = false;
     void FixedUpdate()
     {
+        if (m_BallAni == null)
+        {
+            return;
+        }
+
+        if (!IsRemoveSelf)
+        {
+            if (SSGameDataCtrl.GetInstance().m_TriggerRemoveBall != null)
+            {
+                Vector3 triggerPos = SSGameDataCtrl.GetInstance().m_TriggerRemoveBall.transform.position;
+                if (transform.position.y < triggerPos.y - 15f)
+                {
+                    IsRemoveSelf = true;
+                    IsInitMoveBall = false;
+                    UnityLog("Remove the ball, time == " + Time.time.ToString("f3"));
+                    m_BallAni.StartCoroutine(m_BallAni.DelayDestroyThis(0.1f));
+                }
+            }
+        }
+
         if (!IsInitMoveBall)
         {
             return;
