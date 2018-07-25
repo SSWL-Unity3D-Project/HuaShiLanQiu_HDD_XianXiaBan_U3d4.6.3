@@ -228,37 +228,37 @@ public class pcvr : MonoBehaviour
         }
         else
         {
-            //if (SSUIRoot.GetInstance().m_ExitUICom == null)
-            //{
-            //没有退出游戏界面出现时,可以用遥控器进入游戏.
-            if (m_GmTVLoginDt == null)
+            if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI == null)
             {
-                //遥控器激活玩家.
-                int index = GetActivePlayerIndex();
-                if (index < m_MaxPlayerNum && index > -1)
+                //没有退出游戏界面出现时,可以用遥控器进入游戏.
+                if (m_GmTVLoginDt == null)
                 {
-                    Debug.Log("Unity: click TVYaoKong EnterBt -> --> active TV_YaoKongQi " + index + " player!");
-                    m_GmWXLoginDt[index].IsLoginWX = true;
-                    m_GmWXLoginDt[index].IsActiveGame = true;
-                    m_GmWXLoginDt[index].m_GamePadType = GamePadType.TV_YaoKongQi;
-                    SSGameDataCtrl.GetInstance().m_PlayerData[index].PlayerHeadUrl = "";
-                    m_GmTVLoginDt = new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi);
-                    InputEventCtrl.GetInstance().ClickStartBt((SSGameDataCtrl.PlayerIndex)index, InputEventCtrl.ButtonState.DOWN);
-                }
-            }
-            else
-            {
-                if (m_GmTVLoginDt.Index > -1 && m_GmTVLoginDt.Index < m_MaxPlayerNum)
-                {
-                    //Debug.Log("OnEventActionOperation -> playerIndex == " + playerDt.Index);
-                    if (m_IndexPlayerActiveGameState[m_GmTVLoginDt.Index] == (int)PlayerActiveState.JiHuo)
+                    //遥控器激活玩家.
+                    int index = GetActivePlayerIndex();
+                    if (index < m_MaxPlayerNum && index > -1)
                     {
-                        //处于激活状态的玩家才可以进行游戏操作.
-                        InputEventCtrl.GetInstance().ClickStartBt((SSGameDataCtrl.PlayerIndex)m_GmTVLoginDt.Index, InputEventCtrl.ButtonState.DOWN);
+                        Debug.Log("Unity: click TVYaoKong EnterBt -> --> active TV_YaoKongQi " + index + " player!");
+                        m_GmWXLoginDt[index].IsLoginWX = true;
+                        m_GmWXLoginDt[index].IsActiveGame = true;
+                        m_GmWXLoginDt[index].m_GamePadType = GamePadType.TV_YaoKongQi;
+                        SSGameDataCtrl.GetInstance().m_PlayerData[index].PlayerHeadUrl = "";
+                        m_GmTVLoginDt = new TVYaoKongPlayerData(index, GamePadType.TV_YaoKongQi);
+                        InputEventCtrl.GetInstance().ClickStartBt((SSGameDataCtrl.PlayerIndex)index, InputEventCtrl.ButtonState.DOWN);
+                    }
+                }
+                else
+                {
+                    if (m_GmTVLoginDt.Index > -1 && m_GmTVLoginDt.Index < m_MaxPlayerNum)
+                    {
+                        //Debug.Log("OnEventActionOperation -> playerIndex == " + playerDt.Index);
+                        if (m_IndexPlayerActiveGameState[m_GmTVLoginDt.Index] == (int)PlayerActiveState.JiHuo)
+                        {
+                            //处于激活状态的玩家才可以进行游戏操作.
+                            InputEventCtrl.GetInstance().ClickStartBt((SSGameDataCtrl.PlayerIndex)m_GmTVLoginDt.Index, InputEventCtrl.ButtonState.DOWN);
+                        }
                     }
                 }
             }
-            //}
 
         }
     }
