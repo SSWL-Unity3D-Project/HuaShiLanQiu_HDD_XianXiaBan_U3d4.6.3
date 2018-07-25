@@ -3,9 +3,13 @@
 public class SSGameScoreUI : SSGameMono
 {
     /// <summary>
-    /// 微信头像控制组件.
+    /// 需要移动位置的UI.
     /// </summary>
-    //public SSWeiXinHeadImg m_WeiXinHead;
+    public Transform m_UIPosTr;
+    /// <summary>
+    /// 位置的x轴信息.
+    /// </summary>
+    public int[] m_UIPosX = new int[2];
     /// <summary>
     /// 得分王UI对象.
     /// </summary>
@@ -34,10 +38,13 @@ public class SSGameScoreUI : SSGameMono
         SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexVal].m_GameScoreCom = this;
         SetActiveDeFenWang(false);
         ShowPlayerScore(SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexVal].Score);
-        //if (m_WeiXinHead != null)
-        //{
-        //    m_WeiXinHead.Init(indexVal);
-        //}
+        if (m_UIPosTr != null && m_UIPosX.Length > (int)indexVal)
+        {
+            //动态修改UI坐标.
+            Vector3 posTmp = m_UIPosTr.localPosition;
+            posTmp.x = m_UIPosX[(int)indexVal];
+            m_UIPosTr.localPosition = posTmp;
+        }
     }
 
     internal void RemoveSelf()
