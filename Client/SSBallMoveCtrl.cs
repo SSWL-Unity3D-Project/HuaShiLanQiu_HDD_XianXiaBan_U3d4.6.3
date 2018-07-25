@@ -293,7 +293,7 @@ public class SSBallMoveCtrl : SSGameMono
                 {
                     vecHB.x = -1f;
                 }
-                vecHB.y = -2f;
+                vecHB.y = -1f;
                 float randForceOffset = UnityEngine.Random.Range(0.03f, 0.06f);
                 m_Rigidbody.AddForce(vecHB * m_ForceBall * randForceOffset, ForceMode.Impulse);
                 //m_Rigidbody.AddTorque(transform.right * m_TorqueBall);
