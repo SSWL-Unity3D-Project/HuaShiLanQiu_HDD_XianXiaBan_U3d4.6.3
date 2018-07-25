@@ -53,6 +53,7 @@ public class SSBallAniCtrl : SSGameMono
     public YanWuTXData m_YanWuTXDt;
     [HideInInspector]
     public GameObject m_YanWuTXObj;
+    bool IsRemoveSelf = false;
 
     /// <summary>
     /// 玩家索引.
@@ -69,7 +70,7 @@ public class SSBallAniCtrl : SSGameMono
         GameObject ballPrefab = null;
         SSGameDataCtrl.LanQiuType lanQiuType = SSGameDataCtrl.LanQiuType.Null;
         bool isLianFaQiu = SSGameDataCtrl.GetInstance().m_BallSpawnArray[(int)index].IsLianFaBall;
-        if (!isLianFaQiu && rv < SSGameDataCtrl.GetInstance().m_BallCreatRule[indexSpawnBallJieDuan].ZhaDanBall)
+        if (!isLianFaQiu && rv < SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(indexSpawnBallJieDuan).ZhaDanBall)
         {
             //产生炸弹篮球.
             lanQiuType = SSGameDataCtrl.LanQiuType.ZhaDan;
@@ -93,7 +94,7 @@ public class SSBallAniCtrl : SSGameMono
             }
 
             rv = Random.Range(0, 100) / 100f;
-            if (rv < SSGameDataCtrl.GetInstance().m_BallCreatRule[indexSpawnBallJieDuan].PuTongBall)
+            if (rv < SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(indexSpawnBallJieDuan).PuTongBall)
             {
                 //产生普通篮球.
                 lanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
@@ -123,7 +124,8 @@ public class SSBallAniCtrl : SSGameMono
 
         GameObject ballObj = (GameObject)Instantiate(ballPrefab, m_BallData.m_BallSpawnTr);
         SSBallMoveCtrl.BallMoveData ballMoveDt = new SSBallMoveCtrl.BallMoveData(lanQiuType, ballObj.transform, this, isYanWuTxBall);
-        m_BallMove.Init(ballMoveDt);
+        float speedBeiLv = SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(indexSpawnBallJieDuan).BallSpeedBeiLv;
+        m_BallMove.Init(ballMoveDt, speedBeiLv);
     }
 
     public IEnumerator DelayDestroyThis(float time)
@@ -134,16 +136,39 @@ public class SSBallAniCtrl : SSGameMono
         }
         IsDestroySelf = true;
 
+        if (m_BallMove != null)
+        {
+            //清理注册的事件.
+            m_BallMove.RemoveUIRootEvent();
+        }
+
         //bool isCreatBall = false;
         if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].Score > 0)
         {
-            if (m_BallMove != null && !m_BallMove.IsDeFenQiu)
+            if (m_BallMove != null
+                && !m_BallMove.IsDeFenQiu
+                && m_BallMove.m_BallMoveData.m_LanQiuType != SSGameDataCtrl.LanQiuType.ZhaDan)
             {
-                int scoreVal = SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].Score;
-                if (scoreVal > 0)
+                if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].PlayerHealth > 1)
                 {
-                    //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
-                    SSGameDataCtrl.GetInstance().SetActivePlayer(IndexPlayer, false);
+                    SSGameDataCtrl.GetInstance().PlayKongXinQiuTXAni(SSKongXinQiuTXAni.TeXiaoState.JieQiuShiWu, IndexPlayer);
+                    SSGameDataCtrl.GetInstance().m_AudioData.PlayJieQiuShiWuAudio();
+                    SSGameDataCtrl.GetInstance().m_SSUIRoot.m_FuHuoCiShu.PlayFuHuoCiShuAni(IndexPlayer);
+                }
+
+                if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].PlayerHealth > 0)
+                {
+                    SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].PlayerHealth--;
+                    //if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].PlayerHealth == 1)
+                    //{
+                    //    SSGameDataCtrl.GetInstance().m_SSUIRoot.m_FuHuoCiShu.SetActivePlayerHealth(IndexPlayer, false);
+                    //}
+
+                    if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)IndexPlayer].PlayerHealth <= 0)
+                    {
+                        //分数大于零后,接篮球有失误时则关闭该玩家的控制权.
+                        SSGameDataCtrl.GetInstance().SetActivePlayer(IndexPlayer, false);
+                    }
                 }
             }
         }
@@ -163,6 +188,18 @@ public class SSBallAniCtrl : SSGameMono
         //}
         yield return new WaitForSeconds(time);
         Destroy(gameObject);
+        SSGameDataCtrl.GetInstance().CheckGameDaoJuGouMaiUI();
+    }
+
+    public void RemoveSelf()
+    {
+        if (IsRemoveSelf)
+        {
+            return;
+        }
+        IsRemoveSelf = true;
+        Destroy(gameObject);
+        //SSGameDataCtrl.GetInstance().CheckGameDaoJuGouMaiUI();
     }
 
     /// <summary>
@@ -183,8 +220,7 @@ public class SSBallAniCtrl : SSGameMono
     {
         if (m_BallData.m_ExpZhaDanBallPrefab != null)
         {
-            GameObject obj = (GameObject)Instantiate(m_BallData.m_ExpZhaDanBallPrefab, transform.position, transform.rotation);
-            obj.transform.SetParent(SSGameRootCtrl.GetInstance().MissionCleanup);
+            Instantiate(m_BallData.m_ExpZhaDanBallPrefab, SSGameRootCtrl.GetInstance().MissionCleanup, transform);
         }
         else
         {

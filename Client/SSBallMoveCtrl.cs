@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class SSBallMoveCtrl : SSGameMono
 {
@@ -12,9 +13,20 @@ public class SSBallMoveCtrl : SSGameMono
     /// </summary>
     [HideInInspector]
     public bool IsLastLianFaQiu = false;
+    /// <summary>
+    /// 篮球碰到篮筐的音效.
+    /// </summary>
+    public AudioSource m_HitLanKuangAudio;
+    /// <summary>
+    /// 篮球的碰撞刚体.
+    /// </summary>
     public Rigidbody m_Rigidbody;
     [HideInInspector]
     public SSBallAniCtrl m_BallAni;
+    /// <summary>
+    /// 篮球转动控制脚本.
+    /// </summary>
+    TweenRotation m_BallTweenRot;
     public class BallMoveData
     {
         public SSGameDataCtrl.LanQiuType m_LanQiuType = SSGameDataCtrl.LanQiuType.PuTong;
@@ -39,6 +51,7 @@ public class SSBallMoveCtrl : SSGameMono
         if (!IsInitMoveBall)
         {
             UnityLogWarning("Should be hidden the ball!");
+            gameObject.SetActive(false);
         }
     }
 
@@ -55,8 +68,37 @@ public class SSBallMoveCtrl : SSGameMono
 
         if (ballDt.m_RealBallTr != null)
         {
-            ballDt.m_RealBallTr.localEulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
+            ballDt.m_RealBallTr.localEulerAngles = new Vector3(0f, UnityEngine.Random.Range(0f, 360f), 0f);
         }
+        m_BallTweenRot = m_BallAni.m_BallData.m_BallSpawnTr.gameObject.GetComponent<TweenRotation>();
+
+        SSGameDataCtrl.GetInstance().m_SSUIRoot.OnCreatExitGameUIEvent += OnCreatExitGameUIEvent;
+        SSGameDataCtrl.GetInstance().m_SSUIRoot.OnRemoveExitGameUIEvent += OnRemoveExitGameUIEvent;
+    }
+
+    private void OnCreatExitGameUIEvent()
+    {
+        if (m_BallTweenRot != null && m_BallTweenRot.enabled)
+        {
+            m_BallTweenRot.enabled = false;
+        }
+    }
+
+    private void OnRemoveExitGameUIEvent()
+    {
+        if (m_BallTweenRot != null && m_BallTweenRot.enabled)
+        {
+            m_BallTweenRot.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// 删除退出游戏窗口事件.
+    /// </summary>
+    public void RemoveUIRootEvent()
+    {
+        SSGameDataCtrl.GetInstance().m_SSUIRoot.OnCreatExitGameUIEvent -= OnCreatExitGameUIEvent;
+        SSGameDataCtrl.GetInstance().m_SSUIRoot.OnRemoveExitGameUIEvent -= OnRemoveExitGameUIEvent;
     }
 
     int m_MoveCount = 0;
@@ -64,11 +106,18 @@ public class SSBallMoveCtrl : SSGameMono
     /// 篮球运动速度倍率控制.
     /// </summary>
     float m_BallMoveSpeedBeiLv = 1f;
-    bool IsRemoveSelf = false;
+    [HideInInspector]
+    public bool IsRemoveSelf = false;
     void FixedUpdate()
     {
         if (m_BallAni == null)
         {
+            return;
+        }
+
+        if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI != null)
+        {
+            //退出游戏界面存在时,停止篮球运动.
             return;
         }
 
@@ -77,11 +126,17 @@ public class SSBallMoveCtrl : SSGameMono
             if (SSGameDataCtrl.GetInstance().m_TriggerRemoveBall != null)
             {
                 Vector3 triggerPos = SSGameDataCtrl.GetInstance().m_TriggerRemoveBall.transform.position;
-                if (transform.position.y < triggerPos.y - 15f)
+                float disRemove = 15f;
+                if (SSGameDataCtrl.GetInstance().IsStopCreatBall)
+                {
+                    disRemove = 8f;
+                }
+
+                if (transform.position.y < triggerPos.y - disRemove)
                 {
                     IsRemoveSelf = true;
                     IsInitMoveBall = false;
-                    UnityLog("Remove the ball, time == " + Time.time.ToString("f3"));
+                    //UnityLog("Remove the ball, time == " + Time.time.ToString("f3"));
                     m_BallAni.StartCoroutine(m_BallAni.DelayDestroyThis(0.1f));
                 }
             }
@@ -175,35 +230,64 @@ public class SSBallMoveCtrl : SSGameMono
     /// </summary>
     [HideInInspector]
     public bool IsDeFenQiu = false;
+    /// <summary>
+    /// 是否进入篮筐.
+    /// </summary>
+    [HideInInspector]
+    public bool IsEnterLanKuang = false;
+    /// <summary>
+    /// 是否在篮筐外面.
+    /// </summary>
+    [HideInInspector]
+    public bool IsExitLanKuang = false;
+
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("OnCollisionEnter...");
-        IsInitMoveBall = false;
+        //Debug.Log("OnCollisionEnter -> colName ================== " + collision.gameObject.name + ", CountOnHit == " + CountOnHit);
+        InteractiveCloth cloth = collision.gameObject.GetComponent<InteractiveCloth>();
         SSTriggerScore triScore = collision.gameObject.GetComponent<SSTriggerScore>();
-        if (triScore == null)
+        if (triScore == null
+            && cloth == null
+            && !IsDeFenQiu)
         {
+            //没有碰上分数触发器和篮网的布料碰撞器.
             CountOnHit++;
         }
 
-        if (m_Rigidbody != null)
+        if (CountOnHit == 0)
         {
-            if (!m_Rigidbody.useGravity)
+            //空心球不去打开篮球的物理碰撞.
+            //Debug.Log("OnCollisionEnter -> player get a kongXinQiu*********************");
+        }
+        else
+        {
+            IsInitMoveBall = false;
+            if (m_Rigidbody != null)
             {
-                m_Rigidbody.useGravity = true;
-            }
-
-            Vector3 hitPos = collision.transform.position;
-            Vector3 ballPos = transform.position;
-            hitPos.z = ballPos.z = 0f;
-            Vector3 vecHB = Vector3.Normalize(ballPos - hitPos);
-            m_Rigidbody.AddForce(vecHB * m_ForceBall, ForceMode.Force);
-            rigidbody.AddTorque(transform.right * m_TorqueBall);
-            if (m_ForceBall > m_MinForceBall)
-            {
-                m_ForceBall -= m_SubForceBall;
-                if (m_ForceBall < m_MinForceBall)
+                if (m_HitLanKuangAudio != null)
                 {
-                    m_ForceBall = m_MinForceBall;
+                    //播放篮球碰撞的音效.
+                    m_HitLanKuangAudio.Play();
+                }
+
+                if (!m_Rigidbody.useGravity)
+                {
+                    m_Rigidbody.useGravity = true;
+                }
+
+                Vector3 hitPos = collision.transform.position;
+                Vector3 ballPos = transform.position;
+                hitPos.z = ballPos.z = 0f;
+                Vector3 vecHB = Vector3.Normalize(ballPos - hitPos);
+                m_Rigidbody.AddForce(vecHB * m_ForceBall, ForceMode.Force);
+                rigidbody.AddTorque(transform.right * m_TorqueBall);
+                if (m_ForceBall > m_MinForceBall)
+                {
+                    m_ForceBall -= m_SubForceBall;
+                    if (m_ForceBall < m_MinForceBall)
+                    {
+                        m_ForceBall = m_MinForceBall;
+                    }
                 }
             }
         }

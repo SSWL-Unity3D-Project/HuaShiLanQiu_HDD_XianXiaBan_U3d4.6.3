@@ -1,6 +1,21 @@
 ﻿
+using UnityEngine;
+
 public class SSGameOverUI : SSGameMono
 {
+    /// <summary>
+    /// 微信头像控制组件.
+    /// </summary>
+    public SSWeiXinHeadImg m_WeiXinHead;
+    /// <summary>
+    /// 玩家分数父级.
+    /// </summary>
+    public Transform PlayerScoreParent;
+    /// <summary>
+    /// 玩家分数坐标信息.
+    /// PlayerScorePosXArray[0] -> 分数为1位数时的坐标.
+    /// </summary>
+    public int[] PlayerScorePosXArray = new int[4];
     /// <summary>
     /// 自销毁延迟时间.
     /// </summary>
@@ -20,6 +35,10 @@ public class SSGameOverUI : SSGameMono
         SSTimeUpCtrl timeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
         timeUpCom.OnTimeUpOverEvent += OnTimeUpOverEvent;
         timeUpCom.Init(m_TimeDestroy);
+        if (m_WeiXinHead != null)
+        {
+            m_WeiXinHead.Init(indexVal);
+        }
     }
 
     private void OnTimeUpOverEvent()
@@ -46,6 +65,14 @@ public class SSGameOverUI : SSGameMono
         UnityLog("SSGameOverUI::ShowPlayerScore -> val == " + val);
         int valTmp = 0;
         string valStr = val.ToString();
+        if (PlayerScoreParent != null)
+        {
+            //调整玩家的分数坐标.
+            Vector3 posTmp = PlayerScoreParent.localPosition;
+            posTmp.x = PlayerScorePosXArray[valStr.Length - 1];
+            PlayerScoreParent.localPosition = posTmp;
+        }
+
         for (int i = 0; i < 4; i++)
         {
             if (m_ScoreNumArray[i] == null)

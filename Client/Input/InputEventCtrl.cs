@@ -87,11 +87,178 @@ public class InputEventCtrl : MonoBehaviour
         }
     }
 
-    void Update()
+    /// <summary>
+    /// 电视遥控器按键消息.
+    /// </summary>
+    public delegate void EventHandelTV(ButtonState val);
+    public event EventHandelTV ClickTVYaoKongExitBtEvent;
+    public void ClickTVYaoKongExitBt(ButtonState val)
     {
+        if (ClickTVYaoKongExitBtEvent != null)
+        {
+            ClickTVYaoKongExitBtEvent(val);
+        }
+    }
+
+    public event EventHandelTV ClickTVYaoKongEnterBtEvent;
+    public void ClickTVYaoKongEnterBt(ButtonState val)
+    {
+        if (ClickTVYaoKongEnterBtEvent != null)
+        {
+            ClickTVYaoKongEnterBtEvent(val);
+        }
+    }
+
+    public event EventHandelTV ClickTVYaoKongLeftBtEvent;
+    public void ClickTVYaoKongLeftBt(ButtonState val)
+    {
+        if (ClickTVYaoKongLeftBtEvent != null)
+        {
+            ClickTVYaoKongLeftBtEvent(val);
+        }
+    }
+
+    public event EventHandelTV ClickTVYaoKongRightBtEvent;
+    public void ClickTVYaoKongRightBt(ButtonState val)
+    {
+        if (ClickTVYaoKongRightBtEvent != null)
+        {
+            ClickTVYaoKongRightBtEvent(val);
+        }
+    }
+    
+    public event EventHandelTV ClickTVYaoKongUpBtEvent;
+    public void ClickTVYaoKongUpBt(ButtonState val)
+    {
+        if (ClickTVYaoKongUpBtEvent != null)
+        {
+            ClickTVYaoKongUpBtEvent(val);
+        }
+    }
+
+    public event EventHandelTV ClickTVYaoKongDownBtEvent;
+    public void ClickTVYaoKongDownBt(ButtonState val)
+    {
+        if (ClickTVYaoKongDownBtEvent != null)
+        {
+            ClickTVYaoKongDownBtEvent(val);
+        }
+    }
+
+    class KeyCodeTV
+    {
+        /// <summary>
+        /// 遥控器确定键的键值.
+        /// </summary>
+        public static KeyCode PadEnter01 = (KeyCode)10;
+        public static KeyCode PadEnter02 = (KeyCode)66;
+    }
+
+    /// <summary>
+    /// 红点点微信手柄消息.
+    /// </summary>
+    public delegate void EventHandelHDD(SSGameDataCtrl.PlayerIndex index, float val);
+    /// <summary>
+    /// 移动红点点微信手柄篮筐事件.
+    /// </summary>
+    public event EventHandelHDD ClickHddPadLanKuangBtEvent;
+    public void ClickHddPadLanKuangBt(SSGameDataCtrl.PlayerIndex index, float val)
+    {
+        if (ClickHddPadLanKuangBtEvent != null)
+        {
+            ClickHddPadLanKuangBtEvent(index, val);
+        }
+    }
+
+    void Update()
+    {        
+        //(KeyCode)10 -> acbox虚拟机的遥控器确定键消息.
+        if (Input.GetKeyDown(KeyCode.KeypadEnter)
+            || Input.GetKeyDown(KeyCode.Return)
+            || Input.GetKeyDown(KeyCodeTV.PadEnter01)
+            || Input.GetKeyDown(KeyCodeTV.PadEnter02)
+            || Input.GetKeyDown(KeyCode.JoystickButton0))
+        {
+            //遥控器的确定键消息.
+            ClickTVYaoKongEnterBt(ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.KeypadEnter)
+            || Input.GetKeyUp(KeyCode.Return)
+            || Input.GetKeyUp(KeyCodeTV.PadEnter01)
+            || Input.GetKeyUp(KeyCodeTV.PadEnter02)
+            || Input.GetKeyUp(KeyCode.JoystickButton0))
+        {
+            //遥控器的确定键消息.
+            ClickTVYaoKongEnterBt(ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            //接收遥控器的返回键/键盘上的Esc按键信息.
+            ClickTVYaoKongExitBt(ButtonState.DOWN);
+        }
+
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            Application.Quit();
+            if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI == null)
+            {
+                //创建退出游戏的窗口.
+                SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnExitGameDlg();
+            }
+            else
+            {
+                //接收遥控器的返回键/键盘上的Esc按键信息.
+                ClickTVYaoKongExitBt(ButtonState.UP);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            //接收遥控器/键盘上的向左按键信息.
+            ClickTVYaoKongLeftBt(ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.Keypad4))
+        {
+            //接收遥控器/键盘上的向左按键信息.
+            ClickTVYaoKongLeftBt(ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            //接收遥控器/键盘上的向右按键信息.
+            ClickTVYaoKongRightBt(ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.Keypad6))
+        {
+            //接收遥控器/键盘上的向右按键信息.
+            ClickTVYaoKongRightBt(ButtonState.UP);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            //接收遥控器/键盘上的向上按键信息.
+            ClickTVYaoKongUpBt(ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Keypad2))
+        {
+            //接收遥控器/键盘上的向上按键信息.
+            ClickTVYaoKongUpBt(ButtonState.UP);
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.Keypad8))
+        {
+            //接收遥控器/键盘上的向下按键信息.
+            ClickTVYaoKongDownBt(ButtonState.DOWN);
+        }
+
+        if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.Keypad8))
+        {
+            //接收遥控器/键盘上的向下按键信息.
+            ClickTVYaoKongDownBt(ButtonState.UP);
         }
 
         if (m_InputDevice != InputDevice.PC)

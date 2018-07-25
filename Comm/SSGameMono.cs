@@ -5,14 +5,22 @@ public class SSGameMono : MonoBehaviour
     /// <summary>
     /// 产生预制.
     /// </summary>
-    public Object Instantiate(GameObject prefab, Transform parent)
+    public Object Instantiate(GameObject prefab, Transform parent, Transform trPosRot = null)
     {
-        GameObject obj = (GameObject)Instantiate(prefab);
+        GameObject obj = (GameObject)Instantiate(prefab, new Vector3(0f, -9999f, 0f), Quaternion.identity);
         if (parent != null)
         {
             obj.transform.SetParent(parent);
-            obj.transform.localScale = prefab.transform.localScale;
-            obj.transform.localPosition = prefab.transform.localPosition;
+            if (trPosRot == null)
+            {
+                obj.transform.localScale = prefab.transform.localScale;
+                obj.transform.localPosition = prefab.transform.localPosition;
+            }
+            else
+            {
+                obj.transform.position = trPosRot.position;
+                obj.transform.rotation = trPosRot.rotation;
+            }
         }
         return obj;
     }

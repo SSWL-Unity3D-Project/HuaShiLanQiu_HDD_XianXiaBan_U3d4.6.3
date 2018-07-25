@@ -7,6 +7,11 @@ public class SSGameRootCtrl : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public Transform MissionCleanup;
+    /// <summary>
+    /// 场景动态产生的篮球收集器.
+    /// </summary>
+    [HideInInspector]
+    public Transform BallCleanup;
     static SSGameRootCtrl _Instance;
     public static SSGameRootCtrl GetInstance()
     {
@@ -23,5 +28,9 @@ public class SSGameRootCtrl : MonoBehaviour
     {
         GameObject obj = new GameObject("_MissionCleanup");
         MissionCleanup = obj.transform;
+
+        obj = new GameObject("_BallCleanup");
+        BallCleanup = obj.transform;
+        BallCleanup.SetParent(MissionCleanup);
     }
 }

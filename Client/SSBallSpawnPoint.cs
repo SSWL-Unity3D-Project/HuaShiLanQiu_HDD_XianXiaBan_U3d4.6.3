@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SSBallSpawnPoint : MonoBehaviour
+public class SSBallSpawnPoint : SSGameMono
 {
     /// <summary>
     /// 玩家索引.
@@ -53,15 +53,15 @@ public class SSBallSpawnPoint : MonoBehaviour
         {
             if (m_SpawnPointTrArray[i] != null)
             {
+                if (m_SpawnPointTrArray[i].childCount > 0)
+                {
+                    //删除产生点上的篮球.
+                    GameObject obj = m_SpawnPointTrArray[i].GetChild(0).gameObject;
+                    Destroy(obj);
+                }
                 m_SpawnPointTrArray[i].gameObject.SetActive(false);
             }
         }
-        //if (transform.childCount > 0)
-        //{
-        //    //隐藏产生点上的篮球.
-        //    GameObject obj = transform.GetChild(0).gameObject;
-        //    obj.SetActive(false);
-        //}
     }
 
     /// <summary>
@@ -73,10 +73,11 @@ public class SSBallSpawnPoint : MonoBehaviour
         {
             IsLianFaBall = true;
             m_LastLianFaTime = Time.time;
+            m_TimeLastBallSpawn = Time.time;
             m_LianFaBallCount = 0;
 
             float randVal = Random.Range(0f, 100f) / 100f;
-            if (randVal < SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].LianFaBallNum02)
+            if (randVal < SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).LianFaBallNum02)
             {
                 //连发2球.
                 m_LianFaBallNum = 2;
@@ -86,10 +87,10 @@ public class SSBallSpawnPoint : MonoBehaviour
                 //连发3球.
                 m_LianFaBallNum = 3;
             }
-            Debug.Log("InitLianFaBallInfo -> m_LianFaBallNum == " + m_LianFaBallNum + ", player == " + m_PlayerIndex);
+            //UnityLog("InitLianFaBallInfo -> m_LianFaBallNum == " + m_LianFaBallNum + ", player == " + m_PlayerIndex);
 
-            m_TimeMinLianFa = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].m_TimeMinLianFa;
-            int maxPointVal = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].MaxIndex;
+            m_TimeMinLianFa = SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).m_TimeMinLianFa;
+            int maxPointVal = SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).MaxIndex;
             if (maxPointVal == 0 || maxPointVal > m_SpawnPointTrArray.Length)
             {
                 maxPointVal = m_SpawnPointTrArray.Length;
@@ -114,61 +115,39 @@ public class SSBallSpawnPoint : MonoBehaviour
         if (!IsLianFaBall)
         {
             float randVal = Random.Range(0f, 100f) / 100f;
-            if (randVal < SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].LianFaBall)
+            if (randVal < SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).LianFaBall)
             {
                 InitLianFaBallInfo();
             }
         }
     }
-
+    
     /// <summary>
     /// 创建篮球的阶段索引.
     /// </summary>
     [HideInInspector]
-    public int IndexCreatBallJieDuan = 0;
+    public int IndexCreatBallJieDuan
+    {
+        get
+        {
+            int indexVal = SSGameDataCtrl.GetInstance().m_CreatLanQiuStage.IndexCreatBallJieDuan;
+            return indexVal;
+        }
+    }
     public void Init()
     {
-        IndexCreatBallJieDuan = 0;
         IsLianFaBall = false;
-        CreatBallJieDuanTimeUp();
     }
 
     public void ResetInfo()
     {
-        if (m_TimeUpCom != null)
-        {
-            Destroy(m_TimeUpCom);
-        }
-
-        IndexCreatBallJieDuan = 0;
         IsLianFaBall = false;
         IsLianFaBallJianGe = false;
     }
 
-    SSTimeUpCtrl m_TimeUpCom;
-    /// <summary>
-    /// 创建篮球时间节点时间组件.
-    /// </summary>
-    void CreatBallJieDuanTimeUp()
+    void ResetLianFaQiuInfo()
     {
-        Debug.Log("CreatBallJieDuanTimeUp -> IndexCreatBallJieDuan == " + IndexCreatBallJieDuan + ", time " + Time.time);
-        m_TimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
-        m_TimeUpCom.Init(SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].TimeVal);
-        m_TimeUpCom.OnTimeUpOverEvent += OnCreatBallTimeUpOverEvent;
-    }
-
-    private void OnCreatBallTimeUpOverEvent()
-    {
-        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame)
-        {
-            return;
-        }
-
-        if (IndexCreatBallJieDuan < SSGameDataCtrl.GetInstance().m_BallCreatRule.Length - 1)
-        {
-            IndexCreatBallJieDuan++;
-            CreatBallJieDuanTimeUp();
-        }
+        IsLianFaBall = false;
     }
 
     //Update is called once per frame
@@ -180,15 +159,47 @@ public class SSBallSpawnPoint : MonoBehaviour
             return;
         }
 
+        if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI != null)
+        {
+            //退出游戏界面存在时,不继续发球.
+            return;
+        }
+
+        if (SSGameDataCtrl.GetInstance().IsStopCreatBall)
+        {
+            return;
+        }
+
+        if (SSGameDataCtrl.GetInstance().IsPauseGame)
+        {
+            return;
+        }
+
         if (IsLianFaBall)
         {
-            if (Time.time - m_TimeLastBallSpawn >= m_TimeMinLianFa)
+            bool isCreatLianFaBall = false;
+            if (m_LianFaBallCount == 0)
+            {
+                if (Time.time - m_TimeLastBallSpawn >= SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).m_DanFaTimeLianFa)
+                {
+                    isCreatLianFaBall = true;
+                }
+            }
+            else
+            {
+                if (Time.time - m_TimeLastBallSpawn >= m_TimeMinLianFa)
+                {
+                    isCreatLianFaBall = true;
+                }
+            }
+
+            if (isCreatLianFaBall)
             {
                 m_TimeLastBallSpawn = Time.time;
                 //连续发射篮球.
                 SpawnGameBall(m_IndexLianFaSpawn);
                 m_LianFaBallCount++;
-                Debug.Log("LianFaQiu -> index == " + m_LianFaBallCount);
+                //Debug.Log("LianFaQiu -> index == " + m_LianFaBallCount);
                 if (m_LianFaBallCount >= m_LianFaBallNum)
                 {
                     IsLianFaBall = false;
@@ -201,7 +212,7 @@ public class SSBallSpawnPoint : MonoBehaviour
         {
             if (IsLianFaBallJianGe)
             {
-                if (Time.time - m_LastLianFaTime >= SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].m_TimeLianFa)
+                if (Time.time - m_LastLianFaTime >= SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).m_TimeLianFa)
                 {
                     //连发最后一球后,间隔一段时间在发球.
                     IsLianFaBallJianGe = false;
@@ -212,9 +223,9 @@ public class SSBallSpawnPoint : MonoBehaviour
             else
             {
 
-                if (Time.time - m_LastLianFaTime >= SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].m_TimeDanFa)
+                if (Time.time - m_LastLianFaTime >= SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).m_TimeDanFa)
                 {
-                    Debug.Log("SpawnPoint -> creat next ball...");
+                    //Debug.Log("SpawnPoint -> creat next ball...");
                     m_LastLianFaTime = Time.time;
                     CreateGameBall();
                 }
@@ -256,7 +267,7 @@ public class SSBallSpawnPoint : MonoBehaviour
             return;
         }
 
-        int maxPointVal = SSGameDataCtrl.GetInstance().m_BallCreatRule[IndexCreatBallJieDuan].MaxIndex;
+        int maxPointVal = SSGameDataCtrl.GetInstance().GetBallCreatRuleDt(IndexCreatBallJieDuan).MaxIndex;
         if (maxPointVal == 0 || maxPointVal > m_SpawnPointTrArray.Length)
         {
             maxPointVal = m_SpawnPointTrArray.Length;
@@ -284,8 +295,8 @@ public class SSBallSpawnPoint : MonoBehaviour
 
         m_LastIndexPoint = randVal;
         Transform trSpawn = m_SpawnPointTrArray[randVal].transform;
-        GameObject obj = (GameObject)Instantiate(m_BallPrefabArray[randBallVal], trSpawn.position, trSpawn.rotation);
-        obj.transform.SetParent(SSGameRootCtrl.GetInstance().MissionCleanup);
+        GameObject obj = (GameObject)Instantiate(m_BallPrefabArray[randBallVal],
+                                        SSGameRootCtrl.GetInstance().BallCleanup, trSpawn);
         SSBallAniCtrl ballAni = obj.GetComponent<SSBallAniCtrl>();
         ballAni.Init(m_PlayerIndex, IndexCreatBallJieDuan);
 

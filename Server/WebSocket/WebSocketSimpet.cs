@@ -157,6 +157,19 @@ public class WebSocketSimpet : MonoBehaviour
                             + "]}}";
                         break;
                     }
+                case SSBoxPostNet.GamePadState.HuaShiLanQiu:
+                    {
+                        msgToSend += "{\"_msg_name\":\"initGamepad\","
+                            + "\"_msg_object_str\":{\"backgroundImage\":\"bg_ltzj.png\","
+                            + "\"loadGroup\":\"ltzj\","
+                            + "\"buttonStyle\":["
+                            + "{\"name\":\"direction\",\"image\":\"ball_ltzj.png\"},"
+                            + "{\"name\":\"directionBg\",\"image\":\"circle_ltzj.png\"},"
+                            + "{\"name\":\"fireA\",\"image\":\"a_ltzj.png\"},"
+                            + "{\"name\":\"fireB\",\"image\":\"b_ltzj.png\"}"
+                            + "]}}";
+                        break;
+                    }
                 default:
                     {
                         msgToSend += "{\"_msg_name\":\"initGamepad\",\"_msg_object_str\":{\"loadGroup\":\"default\"}}";
@@ -222,6 +235,14 @@ public class WebSocketSimpet : MonoBehaviour
                     string btVal = jd["data"].ToString();
                     int userId = Convert.ToInt32(jd["userId"].ToString());
                     OnNetReceiveActionOperationMsg(btVal, userId);
+                    break;
+                }
+            case "skip":
+                {
+                    //{"data":53,"type":"skip","userId":"93124"}
+                    string dirVal = jd["data"].ToString();
+                    int userId = Convert.ToInt32(jd["userId"].ToString());
+                    OnNetReceiveDirectionAngleMsg(dirVal, userId);
                     break;
                 }
         }

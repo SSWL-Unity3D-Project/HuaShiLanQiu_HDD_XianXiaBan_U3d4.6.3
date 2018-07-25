@@ -18,12 +18,15 @@ public class SSGameDaoJiShi : SSGameMono
             SSGameDataCtrl.GetInstance().IsActiveGameLinkRankUI = true;
             for (int i = 0; i < SSGameDataCtrl.GetInstance().m_PlayerData.Length; i++)
             {
+                SSGameDataCtrl.GetInstance().m_PlayerData[i].IsJieShouTiaoZhan = true;
                 SSGameDataCtrl.GetInstance().m_PlayerData[i].IsPlayGameDaoJiShi = true;
+                SSGameDataCtrl.GetInstance().m_LanKuang[i].SetActiveRealBallKuang(true);
             }
         }
         else
         {
             SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexVal].IsPlayGameDaoJiShi = true;
+            SSGameDataCtrl.GetInstance().m_LanKuang[(int)indexVal].SetActiveRealBallKuang(true);
         }
 
         switch (indexVal)
@@ -39,11 +42,23 @@ public class SSGameDaoJiShi : SSGameMono
                     break;
                 }
         }
+        //设置篮球速度为正常.
+        SSGameDataCtrl.GetInstance().SetLanQiuMoveSpeedType(SSGameDataCtrl.LanQiuMoveSpeed.Normal);
+        //产生复活次数UI.
+        SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameFuHuoCiShuPanel(indexVal);
+
+
+        if (SSGameDataCtrl.GetInstance().m_LastOverPlayerData != null
+            && SSGameDataCtrl.GetInstance().m_LastOverPlayerData.Index == m_PlayerIndex)
+        {
+            //显示继续游戏玩家的分数信息.
+            SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameScoreUI(m_PlayerIndex);
+        }
     }
 
     internal void RemoveSelf()
     {
-        UnityLog("SSGameDaoJiShi -> RemoveSelf, m_PlayerIndex == " + m_PlayerIndex);
+        //UnityLog("SSGameDaoJiShi -> RemoveSelf, m_PlayerIndex == " + m_PlayerIndex);
         switch (m_PlayerIndex)
         {
             case SSGameDataCtrl.PlayerIndex.Null:
@@ -62,6 +77,7 @@ public class SSGameDaoJiShi : SSGameMono
                     break;
                 }
         }
+        SSGameDataCtrl.GetInstance().m_CreatLanQiuStage.Init();
         Destroy(gameObject);
     }
 
@@ -76,5 +92,7 @@ public class SSGameDaoJiShi : SSGameMono
         }
         IsRemoveSelf = true;
         SSGameDataCtrl.GetInstance().m_SSUIRoot.RemoveGameDaoJiShiUI(m_PlayerIndex);
+        SSGameDataCtrl.GetInstance().m_AudioData.PlayGameBeiJingAudio();
+        SSGameDataCtrl.GetInstance().m_CreatLanQiuStage.CreatBallJieDuanTimeUp();
     }
 }

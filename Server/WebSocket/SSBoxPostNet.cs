@@ -9,14 +9,22 @@ public class SSBoxPostNet : MonoBehaviour
 {
     public enum GamePadState
     {
-        Default,                //默认手柄.
-        LeiTingZhanChe,         //雷霆战车手柄.
+        Default = 0,                //默认手柄.
+        LeiTingZhanChe = 1,         //雷霆战车手柄.
+        HuaShiLanQiu = 2,           //花式篮球手柄.
     }
+    GamePadState _GamePadState = GamePadState.HuaShiLanQiu;
     /// <summary>
     /// 游戏手柄枚举.
     /// </summary>
     [HideInInspector]
-    public GamePadState m_GamePadState = GamePadState.LeiTingZhanChe;
+    public GamePadState m_GamePadState
+    {
+        get
+        {
+            return _GamePadState;
+        }
+    }
 
     public void Init()
     {
@@ -31,6 +39,11 @@ public class SSBoxPostNet : MonoBehaviour
         //    m_BoxLoginData.boxNumber = UnityEngine.Random.Range(10, 95) + m_GamePadState.ToString() + ni.GetPhysicalAddress().ToString();
         //    break;
         //}
+
+        if (m_BoxLoginData != null)
+        {
+            m_BoxLoginData.Init(this);
+        }
 
         string ip = Network.player.ipAddress;
         ip = ip.Replace('.', (char)UnityEngine.Random.Range(97, 122));
@@ -114,6 +127,7 @@ public class SSBoxPostNet : MonoBehaviour
     /// </summary>
     public class BoxLoginData
     {
+        SSBoxPostNet BoxPostNet;
         public string url = "http://game.hdiandian.com/gameBox/logon";
         string _boxNumber = "1";
         /// <summary>
@@ -125,8 +139,9 @@ public class SSBoxPostNet : MonoBehaviour
             {
                 _boxNumber = value.ToLower();
                 //設置紅點點遊戲手柄的url.
-                string url = _hDianDianGamePadUrl + _boxNumber;
+                string url = _hDianDianGamePadUrl + _boxNumber + "&gameId=" + (int)(BoxPostNet.m_GamePadState);
                 hDianDianGamePadUrl = url;
+                //Debug.Log("Unity: url == " + url);
             }
             get
             {
@@ -149,6 +164,11 @@ public class SSBoxPostNet : MonoBehaviour
             url = address + "/gameBox/logon";
             _hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=";
             hDianDianGamePadUrl = address + "/gamepad/index.html?boxNumber=1";
+        }
+
+        public void Init(SSBoxPostNet com)
+        {
+            BoxPostNet = com;
         }
     }
     public BoxLoginData m_BoxLoginData = new BoxLoginData("http://game.hdiandian.com", "16"); //测试号.

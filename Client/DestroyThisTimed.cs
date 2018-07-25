@@ -3,15 +3,23 @@ using System.Collections;
 
 public class DestroyThisTimed : MonoBehaviour
 {
-	[Range(0f, 100f)] public float TimeRemove = 5f;
+    public enum DestroyState
+    {
+        Null = -1,
+        /// <summary>
+        /// 篮环爆炸粒子.
+        /// </summary>
+        LanHuanExp = 0,
+    }
     /// <summary>
-    /// 爆炸粒子预置.
+    /// 删除对象的类型.
     /// </summary>
-    GameObject LiZiPrefab;
+    DestroyState m_DestroyState;
     /// <summary>
-    /// 道具宝箱预置.
+    /// 删除时间.
     /// </summary>
-    GameObject BaoXiangPrefab;
+	[Range(0f, 100f)]
+    public float TimeRemove = 5f;
     // Use this for initialization
     void Start()
 	{
@@ -21,24 +29,21 @@ public class DestroyThisTimed : MonoBehaviour
         StartCoroutine(DelayDestroyThis(TimeRemove));
 	}
 
-    public void InitInfo(GameObject liZi, GameObject baoXiang, float timeVal)
+    public void Init(DestroyState type)
     {
-        LiZiPrefab = liZi;
-        BaoXiangPrefab = baoXiang;
-        TimeRemove = timeVal;
+        m_DestroyState = type;
     }
 
     IEnumerator DelayDestroyThis(float time)
     {
         yield return new WaitForSeconds(time);
-        if (LiZiPrefab != null)
+        switch (m_DestroyState)
         {
-            Instantiate(LiZiPrefab, transform.position, transform.rotation);
-        }
-
-        if (BaoXiangPrefab != null)
-        {
-            Instantiate(BaoXiangPrefab, transform.position, transform.rotation);
+            case DestroyState.LanHuanExp:
+                {
+                    SSGameDataCtrl.GetInstance().RemoveLanHuanExplosionToList(gameObject);
+                    break;
+                }
         }
         Destroy(gameObject);
     }

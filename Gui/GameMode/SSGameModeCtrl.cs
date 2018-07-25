@@ -14,7 +14,7 @@ public class SSGameModeCtrl : SSGameMono
         m_PlayerIndex = index;
         SSGameDataCtrl.GetInstance().m_PlayerData[(int)index].m_GameMode = SSGameDataCtrl.GameMode.DanJi;
         SSGameDataCtrl.GetInstance().m_PlayerData[(int)index].IsChooseGameMode = false;
-        SetAnimationModeSelect(true);
+        //SetAnimationModeSelect(true);
 
         InputEventCtrl.GetInstance().OnClickStartBtEvent += OnClickStartBtEvent;
         InputEventCtrl.GetInstance().OnClickLeftHorBtEvent += OnClickLeftHorBtEvent;
