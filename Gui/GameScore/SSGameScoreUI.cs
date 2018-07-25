@@ -5,11 +5,16 @@ public class SSGameScoreUI : SSGameMono
     /// <summary>
     /// 微信头像控制组件.
     /// </summary>
-    public SSWeiXinHeadImg m_WeiXinHead;
+    //public SSWeiXinHeadImg m_WeiXinHead;
     /// <summary>
     /// 得分王UI对象.
     /// </summary>
     public GameObject m_DeFenWangObj;
+    /// <summary>
+    /// 玩家分数坐标信息.
+    /// DeFenWangPosXArray[0] -> 分数为1位数时的坐标.
+    /// </summary>
+    public int[] DeFenWangPosXArray = new int[4];
     /// <summary>
     /// 分数UI列表(由低位到高位进行填充).
     /// </summary>
@@ -29,10 +34,10 @@ public class SSGameScoreUI : SSGameMono
         SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexVal].m_GameScoreCom = this;
         SetActiveDeFenWang(false);
         ShowPlayerScore(SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexVal].Score);
-        if (m_WeiXinHead != null)
-        {
-            m_WeiXinHead.Init(indexVal);
-        }
+        //if (m_WeiXinHead != null)
+        //{
+        //    m_WeiXinHead.Init(indexVal);
+        //}
     }
 
     internal void RemoveSelf()
@@ -67,6 +72,14 @@ public class SSGameScoreUI : SSGameMono
             Vector3 posTmp = PlayerScoreParent.localPosition;
             posTmp.x = PlayerScorePosXArray[valStr.Length - 1];
             PlayerScoreParent.localPosition = posTmp;
+        }
+
+        if (m_DeFenWangObj != null)
+        {
+            //调整玩家的得分王UI坐标.
+            Vector3 posTmpDeFenWang = m_DeFenWangObj.transform.localPosition;
+            posTmpDeFenWang.x = DeFenWangPosXArray[valStr.Length - 1];
+            m_DeFenWangObj.transform.localPosition = posTmpDeFenWang;
         }
 
         for (int i = 0; i < 4; i++)

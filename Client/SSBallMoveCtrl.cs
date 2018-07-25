@@ -144,6 +144,12 @@ public class SSBallMoveCtrl : SSGameMono
 
         if (!IsInitMoveBall)
         {
+            if (m_Rigidbody != null && m_Rigidbody.useGravity)
+            {
+                Vector3 ballDownPos = transform.localPosition;
+                ballDownPos.y -= 0.5f;
+                transform.localPosition = ballDownPos;
+            }
             return;
         }
 
@@ -279,8 +285,13 @@ public class SSBallMoveCtrl : SSGameMono
                 Vector3 ballPos = transform.position;
                 hitPos.z = ballPos.z = 0f;
                 Vector3 vecHB = Vector3.Normalize(ballPos - hitPos);
-                m_Rigidbody.AddForce(vecHB * m_ForceBall, ForceMode.Force);
-                rigidbody.AddTorque(transform.right * m_TorqueBall);
+                if (vecHB.x == 0f)
+                {
+                    vecHB.x = UnityEngine.Random.Range(0, 100) % 2 == 0 ? 1f : -1f;
+                }
+                float randForceOffset = UnityEngine.Random.Range(0.06f, 0.075f);
+                m_Rigidbody.AddForce(vecHB.normalized * m_ForceBall * randForceOffset, ForceMode.Impulse);
+                //m_Rigidbody.AddTorque(transform.right * m_TorqueBall);
                 if (m_ForceBall > m_MinForceBall)
                 {
                     m_ForceBall -= m_SubForceBall;

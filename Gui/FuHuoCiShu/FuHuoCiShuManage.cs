@@ -6,6 +6,10 @@
 public class FuHuoCiShuManage : SSGameMono
 {
     /// <summary>
+    /// 微信头像控制组件.
+    /// </summary>
+    public SSWeiXinHeadImg[] m_WeiXinHead = new SSWeiXinHeadImg[2];
+    /// <summary>
     /// 玩家血值UI.
     /// </summary>
     public GameObject[] m_PlayerHealthObj = new GameObject[2];
@@ -32,6 +36,10 @@ public class FuHuoCiShuManage : SSGameMono
                     SetActivePlayerHealth(playerIndexReverse, false);
                     SetActivePlayerHealth(index, true);
                     ShowPlayerHealth(health, index);
+                    if (m_WeiXinHead[(int)index] != null)
+                    {
+                        m_WeiXinHead[(int)index].Init(index);
+                    }
                     break;
                 }
             case SSGameDataCtrl.PlayerIndex.Null:
@@ -42,6 +50,13 @@ public class FuHuoCiShuManage : SSGameMono
                     SetActivePlayerHealth(SSGameDataCtrl.PlayerIndex.Player02, true);
                     ShowPlayerHealth(healthP1, SSGameDataCtrl.PlayerIndex.Player01);
                     ShowPlayerHealth(healthP2, SSGameDataCtrl.PlayerIndex.Player02);
+                    for (int i = 0; i < m_WeiXinHead.Length; i++)
+                    {
+                        if (m_WeiXinHead[i] != null)
+                        {
+                            m_WeiXinHead[i].Init((SSGameDataCtrl.PlayerIndex)i);
+                        }
+                    }
                     break;
                 }
         }
