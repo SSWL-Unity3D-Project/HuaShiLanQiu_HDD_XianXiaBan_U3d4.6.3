@@ -13,6 +13,10 @@ public class SSUIRootCtrl : SSGameMono
     /// </summary>
     public Transform m_UIAnchorCenter;
     /// <summary>
+    /// 玩家UI中心坐标.
+    /// </summary>
+    Transform[] m_UICenterTrArray = new Transform[2];
+    /// <summary>
     /// 对话框UI中心锚点.
     /// </summary>
     Transform m_DlgUICenterRoot;
@@ -106,9 +110,12 @@ public class SSUIRootCtrl : SSGameMono
     /// </summary>
     [HideInInspector]
     public SSGameDlgManage m_SSGameDlgManage;
-
+    /// <summary>
+    /// 初始化.
+    /// </summary>
     public void Init()
     {
+        CreatUICenterTrArray();
         CreatDlgUICenterRoot();
         if (m_GameTextManage == null)
         {
@@ -121,6 +128,34 @@ public class SSUIRootCtrl : SSGameMono
         }
         SpawnGamneErWeiMa();
         //SpawnGameLanKuangFangDaDingBuPanel(); //test.
+    }
+    
+    /// <summary>
+    /// 创建玩家UI中心坐标父级.
+    /// </summary>
+    void CreatUICenterTrArray()
+    {
+        GameObject obj = null;
+        for (int i = 0; i < m_UICenterTrArray.Length; i++)
+        {
+            obj = new GameObject("UICenP" + (i + 1));
+            obj.transform.SetParent(m_UIAnchorCenter);
+            switch (i)
+            {
+                case 0:
+                    {
+                        obj.transform.localPosition = new Vector3(-320f, 0f, 0f);
+                        break;
+                    }
+                case 1:
+                    {
+                        obj.transform.localPosition = new Vector3(320f, 0f, 0f);
+                        break;
+                    }
+            }
+            obj.transform.localScale = Vector3.one;
+            m_UICenterTrArray[i] = obj.transform;
+        }
     }
 
     /// <summary>
@@ -533,7 +568,7 @@ public class SSUIRootCtrl : SSGameMono
         if (scorePrefab != null)
         {
             //UnityLog("SpawnGamePiaoFenUI -> index == " + indexVal + ", indexScoreVal == " + indexScoreVal);
-            Instantiate(scorePrefab, m_PlayerUIRoot[index]);
+            Instantiate(scorePrefab, m_UICenterTrArray[index]);
         }
         else
         {
