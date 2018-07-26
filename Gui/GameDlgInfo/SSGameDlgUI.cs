@@ -129,6 +129,8 @@ public class SSGameDlgUI : SSGameMono
                     break;
                 }
         }
+        SSGameDataCtrl.GetInstance().CleanLanHuanExplosionToList(SSGameDataCtrl.PlayerIndex.Player01);
+        SSGameDataCtrl.GetInstance().CleanLanHuanExplosionToList(SSGameDataCtrl.PlayerIndex.Player02);
 
         InputEventCtrl.GetInstance().ClickTVYaoKongEnterBtEvent += ClickTVYaoKongEnterBtEvent;
         InputEventCtrl.GetInstance().ClickTVYaoKongLeftBtEvent += ClickTVYaoKongLeftBtEvent;
