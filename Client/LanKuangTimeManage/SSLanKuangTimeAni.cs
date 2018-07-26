@@ -9,6 +9,19 @@ public class SSLanKuangTimeAni : SSGameMono
     /// 篮环UV控制脚本.
     /// </summary>
     public SSLanHuanUV m_LanHuanUV;
+    /// <summary>
+    /// 倒计时音效.
+    /// </summary>
+    public AudioSource m_AudioDaoJiShi;
+    /// <summary>
+    /// 倒计时个位的缩放脚本.
+    /// </summary>
+    public TweenScale[] m_DaoJiShiScale;
+    /// <summary>
+    /// 是否打开倒计时缩放.
+    /// </summary>
+    bool IsOpenDaoJiShiScale = false;
+
     public enum DaoJuState
     {
         /// <summary>
@@ -87,6 +100,8 @@ public class SSLanKuangTimeAni : SSGameMono
         {
             m_LanHuanUV.ResetUV();
         }
+
+        CloseDaoJiShiScale();
     }
     
     public void PlayDaoJiShi(SSGameDataCtrl.PlayerIndex index, DaoJiShiState type, DaoJuState daoJu)
@@ -195,6 +210,7 @@ public class SSLanKuangTimeAni : SSGameMono
         {
             m_LanHuanUV.ResetUV();
         }
+        CloseDaoJiShiScale();
     }
     
     /// <summary>
@@ -229,6 +245,63 @@ public class SSLanKuangTimeAni : SSGameMono
                     }
                     break;
                 }
+        }
+    }
+
+    /// <summary>
+    /// 5秒倒计时触发器信息.
+    /// </summary>
+    public void OnTriggerDaoJiShiScale()
+    {
+        OpenDaoJiShiScale();
+    }
+
+    /// <summary>
+    /// 打开倒计时缩放脚本.
+    /// </summary>
+    void OpenDaoJiShiScale()
+    {
+        if (IsOpenDaoJiShiScale)
+        {
+            return;
+        }
+        IsOpenDaoJiShiScale = true;
+
+        if (m_AudioDaoJiShi != null)
+        {
+            m_AudioDaoJiShi.enabled = true;
+            m_AudioDaoJiShi.Play();
+        }
+
+        for (int i = 0; i < m_DaoJiShiScale.Length; i++)
+        {
+            if (m_DaoJiShiScale[i] != null)
+            {
+                m_DaoJiShiScale[i].ResetToBeginning();
+                m_DaoJiShiScale[i].enabled = true;
+                m_DaoJiShiScale[i].PlayForward();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 关闭倒计时缩放脚本.
+    /// </summary>
+    void CloseDaoJiShiScale()
+    {
+        IsOpenDaoJiShiScale = true;
+        if (m_AudioDaoJiShi != null)
+        {
+            m_AudioDaoJiShi.enabled = false;
+        }
+
+        for (int i = 0; i < m_DaoJiShiScale.Length; i++)
+        {
+            if (m_DaoJiShiScale[i] != null)
+            {
+                m_DaoJiShiScale[i].ResetToBeginning();
+                m_DaoJiShiScale[i].enabled = false;
+            }
         }
     }
 }
