@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// 空心球/火球空心球/玩家接球失误动画特效.
@@ -9,6 +10,10 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// 特效材质.
     /// </summary>
     public Material m_MatTX;
+    /// <summary>
+    /// 动画播放时间控制器.
+    /// </summary>
+    SSTimeUpCtrl m_TimeUpCom;
     public enum TeXiaoState
     {
         /// <summary>
@@ -59,6 +64,28 @@ public class SSKongXinQiuTXAni : SSGameMono
             m_TeXiaoAni.enabled = true;
             string aniTrigger = type.ToString();
             m_TeXiaoAni.SetTrigger(aniTrigger);
+
+            if (m_TimeUpCom != null)
+            {
+                Destroy(m_TimeUpCom);
+            }
+            m_TimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
+            m_TimeUpCom.Init(0.8f);
+            m_TimeUpCom.OnTimeUpOverEvent += OnTimeUpOverEvent;
+        }
+    }
+
+    private void OnTimeUpOverEvent()
+    {
+        //强制更换材质颜色.
+        if (m_MatTX != null)
+        {
+            Color white = new Color(1f, 1f, 1f, 1f);
+            if (m_MatTX.color != white)
+            {
+                //Debug.Log("*********************************************change color...");
+                m_MatTX.color = white;
+            }
         }
     }
 

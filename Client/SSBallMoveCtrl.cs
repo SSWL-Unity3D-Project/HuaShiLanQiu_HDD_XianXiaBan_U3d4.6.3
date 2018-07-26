@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define USE_PULL_BALL_TYPE01
+#define USE_PULL_BALL_TYPE02
 using UnityEngine;
 
 public class SSBallMoveCtrl : SSGameMono
@@ -285,18 +286,44 @@ public class SSBallMoveCtrl : SSGameMono
                 Vector3 ballPos = transform.position;
                 hitPos.z = ballPos.z = 0f;
                 Vector3 vecHB = Vector3.Normalize(ballPos - hitPos);
-                if (vecHB.x > 0f)
+#if USE_PULL_BALL_TYPE02
+                //采用模式2篮球碰撞逻辑.
+                if (m_BallAni != null)
                 {
-                    vecHB.x = 1f;
+                    Transform trLanKuang = SSGameDataCtrl.GetInstance().m_LanKuang[(int)m_BallAni.IndexPlayer].transform;
+                    Vector3 lanKuangPos = trLanKuang.position;
+                    Vector3 ballPosTmp = transform.position;
+                    if (lanKuangPos.x > ballPosTmp.x)
+                    {
+                        vecHB.x = 1f;
+                    }
+                    else
+                    {
+                        vecHB.x = -1f;
+                    }
                 }
                 else
                 {
-                    vecHB.x = -1f;
+                    if (vecHB.x > 0f)
+                    {
+                        vecHB.x = 1f;
+                    }
+                    else
+                    {
+                        vecHB.x = -1f;
+                    }
                 }
                 vecHB.y = -1f;
-                float randForceOffset = UnityEngine.Random.Range(0.03f, 0.06f);
+                float randForceOffset = Random.Range(0.01f, 0.04f);
                 m_Rigidbody.AddForce(vecHB * m_ForceBall * randForceOffset, ForceMode.Impulse);
-                //m_Rigidbody.AddTorque(transform.right * m_TorqueBall);
+#endif
+
+#if USE_PULL_BALL_TYPE01
+                //采用模式1篮球碰撞逻辑.
+                m_Rigidbody.AddForce(vecHB * m_ForceBall, ForceMode.Force);
+                m_Rigidbody.AddTorque(transform.right * m_TorqueBall);
+#endif
+
                 if (m_ForceBall > m_MinForceBall)
                 {
                     m_ForceBall -= m_SubForceBall;

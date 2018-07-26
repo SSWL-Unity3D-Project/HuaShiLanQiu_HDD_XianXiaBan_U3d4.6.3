@@ -23,7 +23,7 @@ public class SSUIRootCtrl : SSGameMono
     /// <summary>
     /// 引导界面.
     /// </summary>
-    public SSYinDaoUI m_SSYinDaoUI;
+    internal SSYinDaoUI m_SSYinDaoUI;
     /// <summary>
     /// 游戏总二维码预制.
     /// </summary>
@@ -355,6 +355,11 @@ public class SSUIRootCtrl : SSGameMono
     }
 
     /// <summary>
+    /// 是否在播放游戏倒计时.
+    /// </summary>
+    [HideInInspector]
+    public bool IsPlayGameDaoJiShi = false;
+    /// <summary>
     /// 产生玩家游戏倒计时UI界面.
     /// </summary>
     public void SpawnGameDaoJiShiUI(SSGameDataCtrl.PlayerIndex indexVal)
@@ -376,6 +381,7 @@ public class SSUIRootCtrl : SSGameMono
                 GameObject obj = (GameObject)Instantiate(m_GameDaoJiShiPrefab, m_DlgUICenterRoot);
                 m_GameDaoJiShiCom[index] = obj.GetComponent<SSGameDaoJiShi>();
                 m_GameDaoJiShiCom[index].Init(indexVal);
+                IsPlayGameDaoJiShi = true;
             }
         }
         else
@@ -411,6 +417,43 @@ public class SSUIRootCtrl : SSGameMono
             UnityLog("RemoveGameDaoJiShiUI -> index == " + indexVal);
             m_GameDaoJiShiCom[index].RemoveSelf();
             m_GameDaoJiShiCom[index] = null;
+        }
+        IsPlayGameDaoJiShi = false;
+    }
+
+    internal SSGameDaoJuDaoJiShi m_SSGameDaoJuDaoJiShi;
+    /// <summary>
+    /// 产生玩家购买游戏道具后的倒计时UI界面.
+    /// </summary>
+    public void SpawnGameDaoJuDaoJiShiUI(SSGameDataCtrl.PlayerIndex indexVal, SSLanKuangTimeAni.DaoJiShiState daoJiShi, SSLanKuangTimeAni.DaoJuState type)
+    {
+        GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/GameDaoJuDaoJiShi/GameDaoJuDaoJiShiUI");
+        if (gmDataPrefab != null)
+        {
+            if (m_SSGameDaoJuDaoJiShi == null)
+            {
+                UnityLog("SpawnGameDaoJuDaoJiShiUI -> index == " + indexVal);
+                GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_DlgUICenterRoot);
+                m_SSGameDaoJuDaoJiShi = obj.GetComponent<SSGameDaoJuDaoJiShi>();
+                m_SSGameDaoJuDaoJiShi.Init(indexVal, daoJiShi, type);
+            }
+        }
+        else
+        {
+            UnityLogWarning("SpawnGameDaoJuDaoJiShiUI -> gmDataPrefab was null");
+        }
+    }
+
+    /// <summary>
+    /// 删除玩家购买游戏道具后的倒计时UI界面.
+    /// </summary>
+    public void RemoveGameDaoJuDaoJiShiUI()
+    {
+        if (m_SSGameDaoJuDaoJiShi != null)
+        {
+            UnityLog("RemoveGameDaoJuDaoJiShiUI");
+            m_SSGameDaoJuDaoJiShi.RemoveSelf();
+            m_SSGameDaoJuDaoJiShi = null;
         }
     }
     

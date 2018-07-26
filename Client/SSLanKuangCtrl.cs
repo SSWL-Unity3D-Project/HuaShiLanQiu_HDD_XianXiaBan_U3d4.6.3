@@ -302,21 +302,28 @@ public class SSLanKuangCtrl : SSGameMono
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame
-            || !SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsCreateGameBall)
+        if (SSGameDataCtrl.GetInstance().m_SSUIRoot.IsPlayGameDaoJiShi)
         {
-            return;
+            //播放游戏倒计时阶段.
         }
-        
-        if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI != null)
+        else
         {
-            //退出游戏界面存在时,不允许移动篮筐.
-            return;
-        }
+            if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame
+                || !SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsCreateGameBall)
+            {
+                return;
+            }
 
-        if (SSGameDataCtrl.GetInstance().IsPauseGame)
-        {
-            return;
+            if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_ExitGameUI != null)
+            {
+                //退出游戏界面存在时,不允许移动篮筐.
+                return;
+            }
+
+            if (SSGameDataCtrl.GetInstance().IsPauseGame)
+            {
+                return;
+            }
         }
         m_RealKuangTr.localPosition = GetRealLanKuangPosition();
     }

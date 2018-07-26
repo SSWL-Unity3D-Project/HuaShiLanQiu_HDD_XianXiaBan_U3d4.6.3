@@ -153,6 +153,11 @@ public class SSBallSpawnPoint : SSGameMono
     //Update is called once per frame
     void Update()
     {
+        if (SSGameDataCtrl.GetInstance().m_SSUIRoot.m_SSGameDaoJuDaoJiShi != null)
+        {
+            return;
+        }
+
         if (!SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsActiveGame
             || !SSGameDataCtrl.GetInstance().m_PlayerData[(int)m_PlayerIndex].IsCreateGameBall)
         {
