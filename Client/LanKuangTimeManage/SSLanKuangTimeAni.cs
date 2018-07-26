@@ -5,6 +5,10 @@
 /// </summary>
 public class SSLanKuangTimeAni : SSGameMono
 {
+    /// <summary>
+    /// 篮环UV控制脚本.
+    /// </summary>
+    public SSLanHuanUV m_LanHuanUV;
     public enum DaoJuState
     {
         /// <summary>
@@ -78,6 +82,11 @@ public class SSLanKuangTimeAni : SSGameMono
         }
         SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player01, false);
         SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player02, false);
+
+        if (m_LanHuanUV != null)
+        {
+            m_LanHuanUV.ResetUV();
+        }
     }
     
     public void PlayDaoJiShi(SSGameDataCtrl.PlayerIndex index, DaoJiShiState type, DaoJuState daoJu)
@@ -113,6 +122,11 @@ public class SSLanKuangTimeAni : SSGameMono
         {
             m_Animator.runtimeAnimatorController = daoJiShiRuntime;
             m_Animator.enabled = true;
+        }
+
+        if (m_LanHuanUV != null)
+        {
+            m_LanHuanUV.InitPlayUVAni(type);
         }
     }
 
@@ -176,6 +190,11 @@ public class SSLanKuangTimeAni : SSGameMono
         }
         SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player01, false);
         SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player02, false);
+
+        if (m_LanHuanUV != null)
+        {
+            m_LanHuanUV.ResetUV();
+        }
     }
     
     /// <summary>

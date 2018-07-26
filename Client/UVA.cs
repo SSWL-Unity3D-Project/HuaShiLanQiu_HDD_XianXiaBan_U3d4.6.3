@@ -2,25 +2,16 @@
 
 public class UVA : MonoBehaviour
 {
-	public float speed=0.5f;
-	public int Array=0;
-	// Update is called once per frame
-	void Update()
+	public float UVSpeed = 0.5f;
+	public int IndexMat = 0;
+    /// <summary>
+    /// UV记录的信息.
+    /// </summary>
+    public float m_UVRecordVal = 0f;
+    // Update is called once per frame
+    void FixedUpdate()
     {
-        /*if (Camera.main == null)
-        {
-            return;
-        }*/
-
-        //Vector3 posA = Camera.main.transform.position;
-        //Vector3 posB = transform.position;
-        //posA.y = posB.y = 0f;
-        //if (Vector3.Distance(posA, posB) > 100f)
-        //{
-        //    return;
-        //}
-
-		float offset = Time.time *speed;
-		renderer.materials[Array].SetTextureOffset("_MainTex",new Vector2 (offset,0));
+        m_UVRecordVal += Time.fixedDeltaTime * UVSpeed;
+		renderer.materials[IndexMat].SetTextureOffset("_MainTex", new Vector2(m_UVRecordVal, 0f));
 	}
 }
