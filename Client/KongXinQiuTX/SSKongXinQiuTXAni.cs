@@ -65,13 +65,13 @@ public class SSKongXinQiuTXAni : SSGameMono
             string aniTrigger = type.ToString();
             m_TeXiaoAni.SetTrigger(aniTrigger);
 
-            if (m_TimeUpCom != null)
+            /*if (m_TimeUpCom != null)
             {
                 Destroy(m_TimeUpCom);
             }
             m_TimeUpCom = gameObject.AddComponent<SSTimeUpCtrl>();
             m_TimeUpCom.Init(0.8f);
-            m_TimeUpCom.OnTimeUpOverEvent += OnTimeUpOverEvent;
+            m_TimeUpCom.OnTimeUpOverEvent += OnTimeUpOverEvent;*/
         }
     }
 
@@ -93,11 +93,11 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// 动画结束事件触发器.
     /// </summary>
     public override void OnEndAnimationTrigger()
-    {
-        if (m_TeXiaoAni != null)
+	{
+        /*if (m_TeXiaoAni != null)
         {
             m_TeXiaoAni.enabled = false;
-        }
+        }*/
 
         if (m_MatTX != null)
         {
