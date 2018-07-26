@@ -289,7 +289,7 @@ public class SSLanKuangTimeAni : SSGameMono
     /// </summary>
     void CloseDaoJiShiScale()
     {
-        IsOpenDaoJiShiScale = true;
+        IsOpenDaoJiShiScale = false;
         if (m_AudioDaoJiShi != null)
         {
             m_AudioDaoJiShi.enabled = false;
