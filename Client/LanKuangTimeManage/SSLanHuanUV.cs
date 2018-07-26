@@ -65,7 +65,7 @@ public class SSLanHuanUV : SSGameMono
     {
         if (m_LanHuanMat != null)
         {
-            m_LanHuanMat.SetTextureOffset("_MainTex", new Vector2(0f, 0f));
+            m_LanHuanMat.SetTextureOffset("_MainTex", new Vector2(m_MaxUVVal, 0f));
         }
         enabled = false;
     }
