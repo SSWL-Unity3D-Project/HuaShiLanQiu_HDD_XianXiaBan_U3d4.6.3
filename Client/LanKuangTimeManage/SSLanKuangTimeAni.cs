@@ -16,7 +16,7 @@ public class SSLanKuangTimeAni : SSGameMono
     /// <summary>
     /// 倒计时个位的缩放脚本.
     /// </summary>
-    public TweenScale[] m_DaoJiShiScale;
+    public TweenScale[] m_DaoJiShiScale = new TweenScale[2];
     /// <summary>
     /// 是否打开倒计时缩放.
     /// </summary>
