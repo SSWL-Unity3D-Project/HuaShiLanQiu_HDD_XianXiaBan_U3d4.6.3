@@ -301,6 +301,7 @@ public class SSLanKuangTimeAni : SSGameMono
             {
                 m_DaoJiShiScale[i].ResetToBeginning();
                 m_DaoJiShiScale[i].enabled = false;
+                m_DaoJiShiScale[i].transform.localScale = m_DaoJiShiScale[i].from;
             }
         }
     }
