@@ -869,7 +869,13 @@ public class SSGameDataCtrl : SSGameMono
         }
 
         UnityLog("SetActivePlayer -> index " + index + ", isActive " + isActive);
+        if (m_KongXinQiuTXArray[(int)index] != null)
+        {
+            //改变玩家当前游戏场景的背景贴图.
+            m_KongXinQiuTXArray[(int)index].ChangePlayerSceneImg(isActive);
+        }
         m_PlayerData[(int)index].IsActiveGame = isActive;
+
         bool isAllPlayerDeath = true;
         if (isActive)
         {
@@ -883,7 +889,7 @@ public class SSGameDataCtrl : SSGameMono
             {
                 m_SSUIRoot.RemoveGamneErWeiMa();
             }
-
+            
             bool isCreateGameFuHuoDaoJu = true;
             //bool isCreateGameModeUI = true;
             //bool isCreateGameDaoJiShi = false;

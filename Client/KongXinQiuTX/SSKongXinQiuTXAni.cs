@@ -11,6 +11,12 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// </summary>
     public Material m_MatTX;
     /// <summary>
+    /// 场景贴图.
+    /// m_SceneImgArray[0] -> 黑白,没有激活游戏.
+    /// m_SceneImgArray[1] -> 彩色,激活游戏.
+    /// </summary>
+    public Texture[] m_SceneImgArray = new Texture[2];
+    /// <summary>
     /// 动画播放时间控制器.
     /// </summary>
     SSTimeUpCtrl m_TimeUpCom;
@@ -33,6 +39,9 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// 动画控制器.
     /// </summary>
     Animator m_TeXiaoAni;
+    /// <summary>
+    /// 初始化.
+    /// </summary>
     public void Init()
     {
         m_TeXiaoAni = gameObject.GetComponent<Animator>();
@@ -45,6 +54,7 @@ public class SSKongXinQiuTXAni : SSGameMono
         {
             m_MatTX.color = new Color(1f, 1f, 1f, 1f);
         }
+        ChangePlayerSceneImg(false);
     }
 
     /// <summary>
@@ -102,6 +112,21 @@ public class SSKongXinQiuTXAni : SSGameMono
         if (m_MatTX != null)
         {
             m_MatTX.color = new Color(1f, 1f, 1f, 1f);
+        }
+    }
+
+    /// <summary>
+    /// 改变玩家当前游戏场景的背景贴图.
+    /// </summary>
+    internal void ChangePlayerSceneImg(bool isActiveGame)
+    {
+        if (m_MatTX != null && m_SceneImgArray.Length >= 2)
+        {
+            Texture img = m_SceneImgArray[isActiveGame == true ? 1 : 0];
+            if (img != null)
+            {
+                m_MatTX.mainTexture = img;
+            }
         }
     }
 }
