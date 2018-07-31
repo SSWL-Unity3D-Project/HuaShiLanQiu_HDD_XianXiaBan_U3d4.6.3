@@ -9,22 +9,26 @@ public class SSGameDaoJuDaoJiShi : SSGameMono
     bool IsRemoveSelf = false;
     SSLanKuangTimeAni.DaoJiShiState m_DaoJiShiState;
     SSLanKuangTimeAni.DaoJuState m_DaoJuType;
-    internal void Init(SSGameDataCtrl.PlayerIndex indexVal, SSLanKuangTimeAni.DaoJiShiState daoJiShi, SSLanKuangTimeAni.DaoJuState type)
+    internal void Init(SSLanKuangTimeAni.DaoJiShiState daoJiShi, SSLanKuangTimeAni.DaoJuState type)
     {
         m_DaoJiShiState = daoJiShi;
         m_DaoJuType = type;
-        switch (indexVal)
+        bool isActive = false;
+        for (int i = 0; i < m_DaoJiShiUI.Length; i++)
         {
-            case SSGameDataCtrl.PlayerIndex.Player01:
+            if (m_DaoJiShiUI[i] != null)
+            {
+                if (SSGameDataCtrl.GetInstance().m_PlayerData[i].IsActiveGame
+                    && SSGameDataCtrl.GetInstance().m_PlayerData[i].IsCreateGameBall)
                 {
-                    m_DaoJiShiUI[(int)SSGameDataCtrl.PlayerIndex.Player02].SetActive(false);
-                    break;
+                    isActive = true;
                 }
-            case SSGameDataCtrl.PlayerIndex.Player02:
+                else
                 {
-                    m_DaoJiShiUI[(int)SSGameDataCtrl.PlayerIndex.Player01].SetActive(false);
-                    break;
+                    isActive = false;
                 }
+                m_DaoJiShiUI[i].SetActive(isActive);
+            }
         }
     }
 

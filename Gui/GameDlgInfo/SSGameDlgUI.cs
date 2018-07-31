@@ -319,7 +319,7 @@ public class SSGameDlgUI : SSGameMono
                     //显示篮筐倒计时.
                     //SSGameDataCtrl.GetInstance().ShowPlayerLanKuangDaoJiShi(SSGameDataCtrl.PlayerIndex.Null, daoJiShi, SSLanKuangTimeAni.DaoJuState.BallSlowSpeed);
                     //显示道具启动倒计时.
-                    SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(m_PlayerIndex, daoJiShi, SSLanKuangTimeAni.DaoJuState.BallSlowSpeed);
+                    SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(daoJiShi, SSLanKuangTimeAni.DaoJuState.BallSlowSpeed);
                     break;
                 }
             case BtState.JuJue:
@@ -361,7 +361,7 @@ public class SSGameDlgUI : SSGameMono
                         //显示篮筐倒计时.
                         //SSGameDataCtrl.GetInstance().ShowPlayerLanKuangDaoJiShi(m_PlayerIndex, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                         //显示道具启动倒计时.
-                        SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(m_PlayerIndex, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
+                        SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                     }
                     else
                     {
@@ -372,7 +372,7 @@ public class SSGameDlgUI : SSGameMono
                             //显示篮筐倒计时.
                             //SSGameDataCtrl.GetInstance().ShowPlayerLanKuangDaoJiShi(SSGameDataCtrl.PlayerIndex.Null, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                             //显示道具启动倒计时.
-                            SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(SSGameDataCtrl.PlayerIndex.Null, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
+                            SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                         }
                         else
                         {
@@ -380,7 +380,7 @@ public class SSGameDlgUI : SSGameMono
                             //显示篮筐倒计时.
                             //SSGameDataCtrl.GetInstance().ShowPlayerLanKuangDaoJiShi(m_PlayerIndex, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                             //显示道具启动倒计时.
-                            SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(m_PlayerIndex, daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
+                            SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnGameDaoJuDaoJiShiUI(daoJiShi, SSLanKuangTimeAni.DaoJuState.LanKuangFangDa);
                         }
                     }
                     break;

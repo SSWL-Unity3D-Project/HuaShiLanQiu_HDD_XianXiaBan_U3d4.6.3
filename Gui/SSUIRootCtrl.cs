@@ -429,17 +429,17 @@ public class SSUIRootCtrl : SSGameMono
     /// <summary>
     /// 产生玩家购买游戏道具后的倒计时UI界面.
     /// </summary>
-    public void SpawnGameDaoJuDaoJiShiUI(SSGameDataCtrl.PlayerIndex indexVal, SSLanKuangTimeAni.DaoJiShiState daoJiShi, SSLanKuangTimeAni.DaoJuState type)
+    public void SpawnGameDaoJuDaoJiShiUI(SSLanKuangTimeAni.DaoJiShiState daoJiShi, SSLanKuangTimeAni.DaoJuState type)
     {
         GameObject gmDataPrefab = (GameObject)Resources.Load("Prefabs/GUI/GameDaoJuDaoJiShi/GameDaoJuDaoJiShiUI");
         if (gmDataPrefab != null)
         {
             if (m_SSGameDaoJuDaoJiShi == null)
             {
-                UnityLog("SpawnGameDaoJuDaoJiShiUI -> index == " + indexVal);
+                UnityLog("SpawnGameDaoJuDaoJiShiUI -> type == " + type);
                 GameObject obj = (GameObject)Instantiate(gmDataPrefab, m_DlgUICenterRoot);
                 m_SSGameDaoJuDaoJiShi = obj.GetComponent<SSGameDaoJuDaoJiShi>();
-                m_SSGameDaoJuDaoJiShi.Init(indexVal, daoJiShi, type);
+                m_SSGameDaoJuDaoJiShi.Init(daoJiShi, type);
             }
         }
         else
