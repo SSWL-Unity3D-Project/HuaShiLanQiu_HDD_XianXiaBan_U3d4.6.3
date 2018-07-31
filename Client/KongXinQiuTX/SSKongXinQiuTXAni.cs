@@ -16,6 +16,20 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// m_SceneImgArray[1] -> 彩色,激活游戏.
     /// </summary>
     public Texture[] m_SceneImgArray = new Texture[2];
+    [System.Serializable]
+    public class ScreenImgData
+    {
+        /// <summary>
+        /// 场景贴图.
+        /// m_SceneImgArray[0] -> 黑白,没有激活游戏.
+        /// m_SceneImgArray[1] -> 彩色,激活游戏.
+        /// </summary>
+        public Texture[] SceneImgArray = new Texture[2];
+    }
+    /// <summary>
+    /// 游戏场景背景图数据.
+    /// </summary>
+    public ScreenImgData[] m_ScreenImgData = new ScreenImgData[2];
     /// <summary>
     /// 动画播放时间控制器.
     /// </summary>
@@ -126,6 +140,24 @@ public class SSKongXinQiuTXAni : SSGameMono
             if (img != null)
             {
                 m_MatTX.mainTexture = img;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 设置游戏背景图的资源信息.
+    /// </summary>
+    public void SetScreenImgInfo(int index)
+    {
+        int indexTmp = index % m_ScreenImgData.Length;
+        if (m_ScreenImgData[indexTmp] != null)
+        {
+            for (int i = 0; i < m_ScreenImgData[indexTmp].SceneImgArray.Length; i++)
+            {
+                if (m_ScreenImgData[indexTmp].SceneImgArray[i] != null)
+                {
+                    m_SceneImgArray[i] = m_ScreenImgData[indexTmp].SceneImgArray[i];
+                }
             }
         }
     }

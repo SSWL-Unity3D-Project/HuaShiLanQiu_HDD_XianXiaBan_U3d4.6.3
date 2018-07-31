@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#define TEST_SHOW_GAME_INFO
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,6 +44,10 @@ public class SSGameDataCtrl : SSGameMono
     /// 空心球动画特效.
     /// </summary>
     public SSKongXinQiuTXAni[] m_KongXinQiuTXArray = new SSKongXinQiuTXAni[2];
+    /// <summary>
+    /// 游戏背景图资源索引.
+    /// </summary>
+    int m_IndexGameBeiJingImg = 0;
     /// <summary>
     /// 游戏UI总控制预制.
     /// </summary>
@@ -1414,13 +1419,30 @@ public class SSGameDataCtrl : SSGameMono
         }
     }
 
-#if UNITY_EDITOR
+    /// <summary>
+    /// 设置游戏背景资源图信息.
+    /// </summary>
+    internal void SetGameBeiJingImgInfo()
+    {
+        for (int i = 0; i < m_KongXinQiuTXArray.Length; i++)
+        {
+            if (m_KongXinQiuTXArray[i] != null)
+            {
+                m_KongXinQiuTXArray[i].SetScreenImgInfo(m_IndexGameBeiJingImg);
+            }
+        }
+        m_IndexGameBeiJingImg++;
+    }
+
+#if UNITY_EDITOR && TEST_SHOW_GAME_INFO
     bool IsPrintGameInfo = false;
     void Update()
     {
         if (Input.GetKeyUp(KeyCode.P))
         {
             IsPrintGameInfo = !IsPrintGameInfo;
+            //SetActivePlayer(PlayerIndex.Player01, false);
+            //SetActivePlayer(PlayerIndex.Player02, false);
         }
     }
 

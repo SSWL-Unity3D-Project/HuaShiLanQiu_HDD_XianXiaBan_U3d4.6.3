@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class SSUIRootCtrl : SSGameMono
@@ -186,6 +185,11 @@ public class SSUIRootCtrl : SSGameMono
             {
                 UnityLogWarning("m_GameErWeiMaPrefab was null");
             }
+        }
+
+        if (SSGameDataCtrl.GetInstance() != null)
+        {
+            SSGameDataCtrl.GetInstance().SetGameBeiJingImgInfo();
         }
 
         if (SSGameDataCtrl.GetInstance().m_LanKuang != null)
@@ -547,6 +551,13 @@ public class SSUIRootCtrl : SSGameMono
             m_GameOverCom[index].RemoveSelf();
             m_GameOverCom[index] = null;
 
+            bool isCreatLianJiRankUI = false;
+            if (SSGameDataCtrl.GetInstance().m_SSUIRoot != null
+                && SSGameDataCtrl.GetInstance().m_SSUIRoot.m_GameLinkRankUICom != null)
+            {
+                isCreatLianJiRankUI = true;
+            }
+
             SSGameDataCtrl.PlayerIndex indexReverse = SSGameDataCtrl.GetInstance().GetReversePlayerIndex(indexVal);
             if (SSGameDataCtrl.GetInstance().m_PlayerData[(int)indexReverse].IsActiveGame)
             {
@@ -565,8 +576,17 @@ public class SSUIRootCtrl : SSGameMono
             }
             else
             {
-                //对方没有玩家.
-                SpawnGameShiFouChongXinKaiShiPanel(indexVal);
+                if (isCreatLianJiRankUI)
+                {
+                    //PK模式游戏结束后的PK成绩UI界面被产生.
+                    //检测是否产生二维码UI.
+                    SSGameDataCtrl.GetInstance().m_SSUIRoot.SpawnPlayerErWeiMa(indexVal);
+                }
+                else
+                {
+                    //对方没有玩家.
+                    SpawnGameShiFouChongXinKaiShiPanel(indexVal);
+                }
             }
         }
     }
