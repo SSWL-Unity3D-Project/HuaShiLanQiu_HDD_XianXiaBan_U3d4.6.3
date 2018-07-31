@@ -127,8 +127,10 @@ public class SSLanKuangTimeAni : SSGameMono
                 }
             case SSGameDataCtrl.PlayerIndex.Null:
                 {
-                    SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player01, true);
-                    SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player02, true);
+                    bool isActiveP1 = SSGameDataCtrl.GetInstance().m_PlayerData[(int)SSGameDataCtrl.PlayerIndex.Player01].IsActiveGame;
+                    bool isActiveP2 = SSGameDataCtrl.GetInstance().m_PlayerData[(int)SSGameDataCtrl.PlayerIndex.Player02].IsActiveGame;
+                    SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player01, isActiveP1);
+                    SetActivePlayerTime(SSGameDataCtrl.PlayerIndex.Player02, isActiveP2);
                     break;
                 }
         }

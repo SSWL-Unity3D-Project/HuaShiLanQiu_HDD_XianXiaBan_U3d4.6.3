@@ -25,25 +25,39 @@ public class SSLanHuanUV : SSGameMono
     /// <summary>
     /// 篮环材质.
     /// </summary>
-    public Material m_LanHuanMat;
+    public Material[] m_LanHuanMat = new Material[2];
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (m_LanHuanMat != null)
-        {
-            m_UVRecordVal += Time.fixedDeltaTime * m_SpeedUV;
-            if (m_UVRecordVal > m_MaxUVVal)
-            {
-                m_UVRecordVal = m_MaxUVVal;
-            }
-            m_LanHuanMat.SetTextureOffset("_MainTex", new Vector2(m_UVRecordVal, 0));
+        SetLanHuanMaterialUV();
+    }
 
-            if (m_UVRecordVal >= m_MaxUVVal)
+    /// <summary>
+    /// 设置篮环材质UV信息.
+    /// </summary>
+    void SetLanHuanMaterialUV()
+    {
+        m_UVRecordVal += Time.fixedDeltaTime * m_SpeedUV;
+        if (m_UVRecordVal > m_MaxUVVal)
+        {
+            m_UVRecordVal = m_MaxUVVal;
+        }
+
+        for (int i = 0; i < m_LanHuanMat.Length; i++)
+        {
+            if (m_LanHuanMat.Length > i
+                && m_LanHuanMat[i] != null
+                && SSGameDataCtrl.GetInstance().m_PlayerData[i].IsActiveGame)
             {
-                //UV动画已经结束.
-                enabled = false;
+                m_LanHuanMat[i].SetTextureOffset("_MainTex", new Vector2(m_UVRecordVal, 0));
             }
+        }
+
+        if (m_UVRecordVal >= m_MaxUVVal)
+        {
+            //UV动画已经结束.
+            enabled = false;
         }
     }
 
@@ -63,9 +77,12 @@ public class SSLanHuanUV : SSGameMono
     /// </summary>
     public void ResetUV()
     {
-        if (m_LanHuanMat != null)
+        for (int i = 0; i < m_LanHuanMat.Length; i++)
         {
-            m_LanHuanMat.SetTextureOffset("_MainTex", new Vector2(m_MaxUVVal, 0f));
+            if (m_LanHuanMat.Length > i && m_LanHuanMat[i] != null)
+            {
+                m_LanHuanMat[i].SetTextureOffset("_MainTex", new Vector2(m_MaxUVVal, 0));
+            }
         }
         enabled = false;
     }
