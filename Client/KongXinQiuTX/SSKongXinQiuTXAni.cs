@@ -53,12 +53,14 @@ public class SSKongXinQiuTXAni : SSGameMono
     /// 动画控制器.
     /// </summary>
     Animator m_TeXiaoAni;
+    //RuntimeAnimatorController m_RuntimeAni;
     /// <summary>
     /// 初始化.
     /// </summary>
     public void Init()
     {
         m_TeXiaoAni = gameObject.GetComponent<Animator>();
+        //m_RuntimeAni = m_TeXiaoAni.runtimeAnimatorController;
         if (m_TeXiaoAni != null)
         {
             m_TeXiaoAni.enabled = false;
@@ -87,6 +89,7 @@ public class SSKongXinQiuTXAni : SSGameMono
             }
             m_TeXiaoAni.enabled = true;
             string aniTrigger = type.ToString();
+            m_TeXiaoAni.ResetTrigger(aniTrigger);
             m_TeXiaoAni.SetTrigger(aniTrigger);
 
             /*if (m_TimeUpCom != null)
