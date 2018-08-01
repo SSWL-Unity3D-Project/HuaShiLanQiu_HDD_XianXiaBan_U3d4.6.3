@@ -48,7 +48,8 @@ public class SSLanHuanUV : SSGameMono
         {
             if (m_LanHuanMat.Length > i
                 && m_LanHuanMat[i] != null
-                && SSGameDataCtrl.GetInstance().m_PlayerData[i].IsActiveGame)
+                && SSGameDataCtrl.GetInstance().m_PlayerData[i].IsActiveGame
+                && SSGameDataCtrl.GetInstance().m_PlayerData[i].IsCreateGameBall)
             {
                 m_LanHuanMat[i].SetTextureOffset("_MainTex", new Vector2(m_UVRecordVal, 0));
             }
