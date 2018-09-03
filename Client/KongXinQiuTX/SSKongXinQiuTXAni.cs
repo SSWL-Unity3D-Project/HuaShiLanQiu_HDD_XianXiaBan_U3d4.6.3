@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// 空心球/火球空心球/玩家接球失误动画特效.
@@ -162,6 +161,7 @@ public class SSKongXinQiuTXAni : SSGameMono
                     m_SceneImgArray[i] = m_ScreenImgData[indexTmp].SceneImgArray[i];
                 }
             }
+            ChangePlayerSceneImg(false);
         }
     }
 }

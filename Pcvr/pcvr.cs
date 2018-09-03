@@ -7,7 +7,22 @@ public class pcvr : MonoBehaviour
     /// <summary>
     /// 输入设备控制.
     /// </summary>
-    public static InputEventCtrl.InputDevice m_InputDevice = InputEventCtrl.InputDevice.HDD;
+    public static InputEventCtrl.InputDevice m_InputDevice = InputEventCtrl.InputDevice.PC;
+    /// <summary>
+    /// 微信小程序虚拟手柄.
+    /// </summary>
+    public SSBoxPostNet.WeiXinShouBingEnum m_WXShouBingType
+    {
+        get
+        {
+            SSBoxPostNet.WeiXinShouBingEnum type = SSBoxPostNet.WeiXinShouBingEnum.XiaoChengXu;
+            //if (m_TVGamePayType == SSGamePayUICtrl.TVGamePayState.DianXinApk)
+            //{
+            //    type = SSBoxPostNet.WeiXinShouBingEnum.XiaoChengXu;
+            //}
+            return type;
+        }
+    }
     /// <summary>
     /// 二维码创建脚本.
     /// </summary>
